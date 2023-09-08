@@ -1,0 +1,16 @@
+.navbar {
+    background-color: rgb(189, 189, 189);
+    border-radius: 10px;
+    box-shadow: 1px 1px rgba(0,0,0,0.75);
+}
+
+.icons {
+    height: 35px;
+}
+
+.searchbar {
+    width: 400px;
+    border-width: 2px;
+    border-color: rgb(196, 196, 196);
+    border-radius: 5px;
+}
