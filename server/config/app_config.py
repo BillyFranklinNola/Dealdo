@@ -3,6 +3,8 @@ import os
 
 load_dotenv()
 
+db = os.environ.get('db')
+
 class Config:
     # Add other configuration options here
     SECRET_KEY = os.environ.get('SECRET_KEY')

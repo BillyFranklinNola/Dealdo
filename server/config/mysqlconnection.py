@@ -1,12 +1,13 @@
 import pymysql.cursors
 
+
 class MySQLConnection:
     def __init__(self, db):
         connection = pymysql.connect(
             host='localhost',
-            user='admin',
-            password='a!tq3rz',
-            db=db,
+            user='root',
+            password='root',
+            db='ecommerce_schema',
             charset='utf8mb4',
             cursorclass=pymysql.cursors.DictCursor,
             autocommit=False

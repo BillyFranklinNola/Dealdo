@@ -17,7 +17,9 @@ export default function ProductCard() {
       </div>
       <div className="reviewline">
         <p className="">- No reviews -</p>
-        <a href="" className="primary">Leave Review</a>
+        <a href="" className="primary">
+          Leave Review
+        </a>
       </div>
       <p className="soldby">SOLD BY:</p>
       <p className="user">BigPoppa274</p>

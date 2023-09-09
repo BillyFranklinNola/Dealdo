@@ -10,6 +10,7 @@ flask-bcrypt = "*"
 pyjwt = "*"
 python-dotenv = "*"
 flask-cors = "*"
+cryptography = "*"
 
 [dev-packages]
 
