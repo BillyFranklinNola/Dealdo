@@ -5,10 +5,10 @@ from dotenv import load_dotenv
 import os, uuid
 load_dotenv()
 
-db = os.environ.get('DATABASE_NAME')
+db = os.environ.get('ecommerce_schema')
 UPLOAD_FOLDER = './uploads'
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
-MAX_IMAGE_SIZE = 2 * 1024 * 1024  # 2 MB (adjust as needed)
+MAX_IMAGE_SIZE = 5 * 1024 * 1024  # 2 MB (adjust as needed)
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS

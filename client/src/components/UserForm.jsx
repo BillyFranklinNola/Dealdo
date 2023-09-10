@@ -8,26 +8,25 @@ const UserForm = (props) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const {
-    initialFirstName,
-    initialLastName,
+    initialFirst_name,
+    initialLast_name,
     initialEmail,
-    initialInstrument,
+    initialAddress,
     initialPassword,
-    initialConfirmPassword,
+    initialConfirm_password,
   } = props;
 
   const [formState, setFormState] = useState({
-    firstName: initialFirstName,
-    lastName: initialLastName,
+    first_name: initialFirst_name,
+    last_name: initialLast_name,
     email: initialEmail,
-    instrument: initialInstrument,
+    address: initialAddress,
     password: initialPassword,
-    confirmPassword: initialConfirmPassword,
+    confirm_password: initialConfirm_password,
     isSubmitted: false,
   });
 
-  const { firstName, lastName, email, instrument, password, confirmPassword } =
-    formState;
+  const { first_name, last_name, email, address, password, confirm_password } = formState;
 
   const { isLoading, isSuccess } = useSelector((state) => state.auth);
 
@@ -40,15 +39,15 @@ const UserForm = (props) => {
 
   const onSubmitHandler = async (e) => {
     e.preventDefault();
-    const musicianData = {
-      firstName,
-      lastName,
+    const userData = {
+      first_name,
+      last_name,
       email,
-      instrument,
+      address,
       password,
-      confirmPassword,
+      confirm_password,
     };
-    const response = await dispatch(register(musicianData));
+    const response = await dispatch(register(userData));
     if (isSuccess) {
       console.log(response.payload);
       setFormState((prevState) => ({
@@ -57,7 +56,7 @@ const UserForm = (props) => {
       }));
       navigate("/");
     } else {
-      const errorResponse = response.payload;
+      const errorResponse = response;
       console.log(errorResponse);
       for (const key of Object.keys(errorResponse)) {
         toast.error(errorResponse[key].message);
@@ -74,7 +73,7 @@ const UserForm = (props) => {
         <form className="mx-auto" onSubmit={onSubmitHandler}>
           <div className="row form-group align-items-center mt-4">
             <label
-              htmlFor="firstName"
+              htmlFor="first_name"
               className="col-4 col-lg-3 col-form-label me-2"
             >
               First Name:
@@ -82,8 +81,8 @@ const UserForm = (props) => {
             <div className="col-7 col-lg-8">
               <input
                 type="text"
-                name="firstName"
-                id="firstName"
+                name="first_name"
+                id="first_name"
                 className="form-control"
                 onChange={changeHandler}
               />
@@ -91,7 +90,7 @@ const UserForm = (props) => {
           </div>
           <div className="row form-group align-items-center mt-4">
             <label
-              htmlFor="lastName"
+              htmlFor="last_name"
               className="col-4 col-lg-3 col-form-label me-2"
             >
               Last Name:
@@ -99,8 +98,8 @@ const UserForm = (props) => {
             <div className="col-7 col-lg-8">
               <input
                 type="text"
-                name="lastName"
-                id="lastName"
+                name="last_name"
+                id="last_name"
                 className="form-control"
                 onChange={changeHandler}
               />
@@ -125,7 +124,7 @@ const UserForm = (props) => {
           </div>
           <div className="row form-group align-items-center mt-4">
             <label
-              htmlFor="streetAddress"
+              htmlFor="address"
               className="col-3 col-lg-2 col-form-label me-2"
             >
               Address:
@@ -133,14 +132,14 @@ const UserForm = (props) => {
             <div className="col-8 col-lg-9">
               <input
                 type="text"
-                name="streetAddress"
-                id="streetAddress"
+                name="address"
+                id="address"
                 className="form-control"
                 onChange={changeHandler}
               />
             </div>
           </div>
-          <div className="row form-group align-items-center mt-4">
+          {/* <div className="row form-group align-items-center mt-4">
             <label
               htmlFor="city"
               className="col-3 col-lg-2 col-form-label me-2"
@@ -241,7 +240,7 @@ const UserForm = (props) => {
                 onChange={changeHandler}
               />
             </div>
-          </div>
+          </div> */}
           <div className="row form-group align-items-center mt-4">
             <label
               htmlFor="password"
@@ -259,9 +258,9 @@ const UserForm = (props) => {
               />
             </div>
           </div>
-          {/* <div className="row form-group align-items-center mt-4">
+          <div className="row form-group align-items-center mt-4">
             <label
-              htmlFor="confirmPassword"
+              htmlFor="confirm_password"
               className="col-4 col-lg-3 col-form-label me-2"
             >
               Confirm Password:
@@ -269,13 +268,13 @@ const UserForm = (props) => {
             <div className="col-7 col-lg-8">
               <input
                 type="password"
-                name="confirmPassword"
-                id="confirmPassword"
+                name="confirm_password"
+                id="confirm_password"
                 className="form-control"
                 onChange={changeHandler}
               />
             </div>
-          </div> */}
+          </div>
           <button input type="submit" className="btn btn-warning mt-4 mb-3">
             Submit
           </button>

@@ -11,9 +11,8 @@ const RegisterScreen = () => {
             initialFirstName=""
             initialLastName=""
             initialEmail=""
-            initialInstrument=""
+            initialAddress=""
             initialPassword=""
-            initialConfirmPassword=""
           />
         </div>
       </div>

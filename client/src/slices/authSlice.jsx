@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 const user = JSON.parse(localStorage.getItem("user"));
 
 const initialState = {
-  musician: user ? user : null,
+  user: user ? user : null,
   isError: false,
   isSuccess: false,
   isLoading: false,
@@ -17,10 +17,11 @@ export const register = createAsyncThunk("auth/register", async (user) => {
   try {
     const response = await authService.register(user);
     toast.success("Registration Successful");
+    console.log("Login Successful");
     return response;
   } catch (error) {
-    const errorResponse = error.response.data.err.errors;
-    console.log(error.response);
+    const errorResponse = error;
+    console.log(errorResponse);
     return errorResponse;
   }
 });
@@ -35,11 +36,15 @@ export const login = createAsyncThunk("auth/login", async (user, thunkAPI) => {
     toast.success("Login Successful");
     return response;
   } catch (error) {
-    const errorResponse = error.response && error.response.data.message;
-    console.log(error.response);
-    console.log(error.response.data.message);
-    return thunkAPI.rejectWithValue(errorResponse);
-  }
+    const errorResponse = error.response
+      if (errorResponse) {
+        const errorMessage = errorResponse.data.errors;
+        return thunkAPI.rejectWithValue(errorMessage);
+      } else {
+        console.log(errorResponse);
+        return thunkAPI.rejectWithValue("An error occurred");
+  }}
+
 });
 
 export const authSlice = createSlice({

@@ -4,6 +4,9 @@ import HomeScreen from './views/HomeScreen';
 import RegisterScreen from './views/RegisterScreen';
 import LoginScreen from './views/LoginScreen';
 import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import AddProductScreen from './views/AddProductScreen';
+
 
 
 function App() {
@@ -28,7 +31,14 @@ function App() {
             <HomeScreen/>
           }
         />
+        <Route
+          path='/products/add'
+          element={
+            <AddProductScreen/>
+          }
+        />
       </Routes>
+
       <ToastContainer/>
     </div>
   );

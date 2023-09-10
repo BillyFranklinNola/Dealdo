@@ -11,6 +11,7 @@ app.register_blueprint(products_bp)
 app.register_blueprint(carts_bp)
 app.register_blueprint(reviews_bp)
 app.register_blueprint(img_bp)
+
 CORS(app, resources={r"/api/*": {"origins": "http://localhost:3000"}})
 
 if __name__=='__main__':
