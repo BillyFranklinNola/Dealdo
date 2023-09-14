@@ -6,17 +6,21 @@ import ShoppingCart from "./ShoppingCart";
 import axios from "axios";
 import ReviewForm from "./ReviewForm";
 import { Rating } from "react-simple-star-rating";
+import ProductInfo from "./ProductInfo";
 
 export default function ProductCard(props) {
   const [productUser, setProductUser] = useState({});
   const [cartOpen, setCartOpen] = useState(false);
   const [reviewOpen, setReviewOpen] = useState(false);
-  const [products, setProducts] = useState([]); 
+  const [productOpen, setProductOpen] = useState(false);
+  // const [products, setProducts] = useState([]); 
   const { product } = props;
   const openCart = () => setCartOpen(true);
   const closeCart = () => setCartOpen(false);
   const openReview = () => setReviewOpen(true);
   const closeReview = () => setReviewOpen(false);
+  const openProduct = () => setProductOpen(true);
+  const closeProduct = () => setProductOpen(false);
   const loggedInUser = useSelector((state) => state.auth.user);
   const token = loggedInUser.token;
   const user_id = loggedInUser.data.user_id;
@@ -41,22 +45,22 @@ export default function ProductCard(props) {
     fetchData();
   }, []);
 
-  const productRating = () => {
-    let rating = 0;
-    let count = 0;
-    try {
-        const allProducts = axios.get("http://localhost:5000/api/products");
-        setProducts(allProducts.data.data);
-        product.reviews.forEach((review) => {
-          rating += review.rating;
-          count++;
-        }
-      );
-    } catch (error) {
-      console.error("Error getting rating", error);
-    } 
-    return rating / count
-  }
+  // const productRating = () => {
+  //   let rating = 0;
+  //   let count = 0;
+  //   try {
+  //       const allProducts = axios.get("http://localhost:5000/api/products");
+  //       setProducts(allProducts.data.data);
+  //       product.reviews.forEach((review) => {
+  //         rating += review.rating;
+  //         count++;
+  //       }
+  //     );
+  //   } catch (error) {
+  //     console.error("Error getting rating", error);
+  //   } 
+  //   return rating / count
+  // }
 
   const addToCart = () => {
     const data = {
@@ -98,14 +102,18 @@ export default function ProductCard(props) {
           readonly={true}
           size={20}
         />
-        <a href="#" className="primary" onClick={openReview}>
+        <a href="#" className="primary" onClick={(e) => {e.preventDefault(); openReview()}}>
           Leave Review
         </a>
       </div>
       <p className="soldby">SOLD BY:</p>
       <p className="user">{productUser.first_name}</p>
+      <a href="#" className="primary mx-auto" onClick={(e) => {e.preventDefault(); openProduct()}}>
+          More Details
+        </a>
       {cartOpen && <ShoppingCart cartOpen={cartOpen} closeCart={closeCart} />}
       {reviewOpen && <ReviewForm reviewOpen={reviewOpen} closeReview={closeReview} product={product} />}
+      {productOpen && <ProductInfo productOpen={productOpen} closeProduct={closeProduct} thisProduct={product} />}
     </div>
   );
 }
