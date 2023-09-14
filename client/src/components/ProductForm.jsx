@@ -8,7 +8,7 @@ const ProductForm = (props) => {
   const [product, setProduct] = useState({});
   const [allProducts, setAllProducts] = useState([]);
   const user = JSON.parse(localStorage.getItem("user"));
-  const token = user.token;  
+  const token = user.token;
   console.log(token);
 
   const {
@@ -32,23 +32,21 @@ const ProductForm = (props) => {
     isSubmitted: false,
   });
 
-  const {
-    userID,
-    name,
-    description,
-    category,
-    quantity,
-    price,
-    img_filenname,
-  } = formState;
+  const { userID, name, description, category, quantity, price } = formState;
 
   const changeHandler = (e) => {
-    setFormState((prevState) => ({
-      ...prevState,
-      [e.target.name]: e.target.value,
-    }));
+    if (e.target.name === "image") {
+    setFormState({
+      ...formState,
+      [e.target.name]: e.target.files[0],
+    });
+    } else {
+      setFormState({
+        ...formState,
+        [e.target.name]: e.target.value,
+      });
     console.log(formState);
-  };
+  }};
 
   const onSubmitHandler = async (e) => {
     e.preventDefault();
@@ -59,7 +57,6 @@ const ProductForm = (props) => {
       category,
       quantity,
       price,
-      img_filenname,
     };
     try {
       const newProduct = await axios.post(
@@ -71,8 +68,26 @@ const ProductForm = (props) => {
           },
         }
       );
-      console.log(newProduct);
-      setProduct(newProduct.data.product);
+      console.log(newProduct.data.data);
+      const formData = new FormData();
+      formData.append("file", formState.image);
+      formData.append("product_id", newProduct.data.data.product_id);
+      try {
+        const newImage = await axios.post(
+          `http://localhost:5000/api/img/products/upload`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        console.log(newImage);
+      } catch (error) {
+        console.log(error);
+      }
+      setProduct(newProduct.data.data);
       setAllProducts([...allProducts, newProduct.data.product]);
       toast.success("Product added successfully!");
       navigate("/products");
@@ -81,6 +96,7 @@ const ProductForm = (props) => {
       toast.error("Error adding product!");
     }
   };
+
   return (
     <div className="container-fluid">
       <div className="panelBackground text-secondary mx-auto p-3 border border-2 border-dark rounded">

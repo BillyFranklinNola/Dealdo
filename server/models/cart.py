@@ -6,7 +6,7 @@ import os
 load_dotenv()
 
 class Cart:
-    db = os.environ.get('DATABASE_NAME')
+    db = os.environ.get('ecommerce_schema')
 
     query_select_cart = """SELECT carts.*,
                    GROUP_CONCAT(products.id SEPARATOR '^') AS product_ids,
@@ -18,7 +18,7 @@ class Cart:
                    GROUP_CONCAT(products_in_carts.quantity_in_cart SEPARATOR '^') AS product_quantities_in_cart,
                    GROUP_CONCAT(products_in_carts.purchase_price SEPARATOR '^') AS product_purchase_prices,
                    GROUP_CONCAT(products.price SEPARATOR '^') AS product_prices,
-                   GROUP_CONCAT(products.img_url SEPARATOR '^') AS product_img_urls,
+                   GROUP_CONCAT(products.img_filename SEPARATOR '^') AS product_img_filenames,
                    GROUP_CONCAT(products.created_at SEPARATOR '^') AS product_created_ats,
                    GROUP_CONCAT(products.updated_at SEPARATOR '^') AS product_updated_ats
                    FROM carts
@@ -192,7 +192,7 @@ class Cart:
             product_quantities = result['product_quantities'].split('^') if result['product_quantities'] else ''
             product_quantities_in_cart = result['product_quantities_in_cart'].split('^') if result['product_quantities_in_cart'] else ''
             product_prices = result['product_purchase_prices'].split('^') if result['product_purchase_prices'] else result['product_prices'].split('^') if result['product_prices'] else ''
-            product_img_urls = result['product_img_urls'].split('^') if result['product_img_urls'] else ''
+            product_img_filenames = result['product_img_filenames'].split('^') if result['product_img_filenames'] else ''
             product_created_ats = result['product_created_ats'].split('^') if result['product_created_ats'] else ''
             product_updated_ats = result['product_updated_ats'].split('^') if result['product_updated_ats'] else ''
             
@@ -206,7 +206,7 @@ class Cart:
                     'quantity': int(product_quantities[i]),
                     'quantity_in_cart': int(product_quantities_in_cart[i]),
                     'price': float(product_prices[i]),
-                    'img_url': product_img_urls[i],
+                    'img_filename': product_img_filenames[i],
                     'creator' : user.User.get_user_by_id(product_user_ids[i]),
                     'created_at': product_created_ats[i],
                     'updated_at': product_updated_ats[i],

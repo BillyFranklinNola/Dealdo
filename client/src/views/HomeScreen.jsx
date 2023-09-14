@@ -7,7 +7,6 @@ export default function HomeScreen() {
   return (
     <div>
       <NavbarTop />
-      <ProductCard />
       <ProductList />
     </div>
   );

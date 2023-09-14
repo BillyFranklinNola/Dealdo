@@ -1,0 +1,13 @@
+.modalBody {
+    width: 800px;
+    height: 800px;
+  }
+
+  .image {
+    max-height: 100px;
+    border: 1px solid black;
+    border-radius: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+    object-fit: contain;
+  }

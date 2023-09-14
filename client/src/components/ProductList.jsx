@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import ProductCard from "./ProductCard";
 
 function ProductList() {
   const [products, setProducts] = useState([]);
-  const apiUrl = "http://localhost:5000/api/products";
 
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await axios.get(apiUrl);
+        const response = await axios.get("http://localhost:5000/api/products");
         setProducts(response.data.data);
         console.log("Products have been received!");
         console.log(response.data.data);
@@ -21,12 +21,11 @@ function ProductList() {
 
   return (
     <div>
-      <h1>Product List</h1>
-      <ul>
+      <div className="d-flex">
         {products.map((product) => (
-          <li key={product.id}>{product.name}</li>
+          <ProductCard key={product.id} product={product}/>
         ))}
-      </ul>
+      </div>
     </div>
   );
 }

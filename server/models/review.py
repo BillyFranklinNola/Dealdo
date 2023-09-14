@@ -5,7 +5,7 @@ import os
 load_dotenv()
 
 class Review:
-    db = os.environ.get('DATABASE_NAME')
+    db = os.environ.get('ecommerce_schema')
 
     def __init__(self, data):
         self.id = data['id']
