@@ -45,13 +45,11 @@
   flex-direction: row;
   justify-content: space-between;
   margin-top: 10px;
-  margin-left: 10px;
 }
 
 .soldby {
   font-size: 15px;
   font-weight: bold;
-  margin-left: 10px;
   margin-top: 5px;
 }
 

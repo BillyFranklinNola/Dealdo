@@ -8,9 +8,22 @@
   height: 35px;
 }
 
+
 .searchbar {
   width: 400px;
+  height: 30px;
   border-width: 2px;
   border-color: rgb(196, 196, 196);
   border-radius: 5px;
+}
+
+.searchBtn {
+  height: 30px;
+  border-radius: 5px;
+  margin-left: 5px;
+  background-color: darkgray;
+  color: white;
+  font-size: small;
+  font-weight: 500;
+
 }

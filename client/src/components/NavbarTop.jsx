@@ -1,33 +1,144 @@
-import React , { useState } from "react";
+import React, { useState } from "react";
 import cartIcon from "../images/cartIcon.png";
 import profileIcon from "../images/profileIcon.png";
 import plusIcon from "../images/plusIcon.png";
-import { useNavigate } from "react-router-dom";
-
+import { useSelector } from 'react-redux'
 import "../styles/NavbarTop.css";
 import ShoppingCart from "./ShoppingCart";
+import axios from "axios";
+import ProductForm from "./ProductForm";
+import UserProducts from "./UserProducts"
 
 export default function NavbarTop() {
-  const navigate = useNavigate();
-  const [open, setOpen] = useState(false);
+  const [cartOpen, setCartOpen] = useState(false);
+  const [productFormOpen, setProductFormOpen] = useState(false);
+  const [userProductsOpen, setUserProductsOpen] = useState(false);
+  const [searchCriteria, setSearchCriteria] = useState({ criteria: "" });
+  const [searchResults, setSearchResults] = useState([]);
+  const loggedInUser = useSelector((state) => state.auth.user);
+  const id = loggedInUser.data.user_id;
+  console.log(searchCriteria);
 
-  const cartOpen = () => setOpen(true);
-  const closeCart = () => setOpen(false);
+  const openCart = () => setCartOpen(true);
+  const closeCart = () => setCartOpen(false);
+  const openProductForm = () => setProductFormOpen(true);
+  const closeProductForm = () => setProductFormOpen(false);
+  const openUserProducts = () => setUserProductsOpen(true);
+  const closeUserProducts = () => setUserProductsOpen(false);
+
+
+  const searchProducts = async (e) => {
+    e.preventDefault();
+
+    const productIDs = new Set();
+
+    try {
+      const nameSearch = await axios.get(
+        `http://localhost:5000/api/products/name/${searchCriteria.criteria}`
+      );
+      nameSearch.data.data.forEach((product) => {
+        if (!productIDs.has(product.product_id)) {
+          setSearchResults((prevResults) => [
+            ...prevResults,
+            ...nameSearch.data.data,
+          ]);
+          productIDs.add(product.product_id);
+        }
+      });
+      console.log("Name search successful");
+    } catch (error) {
+      console.error("Error in name search:", error);
+    }
+
+    try {
+      const categorySearch = await axios.get(
+        `http://localhost:5000/api/products/category/${searchCriteria.criteria}`
+      );
+      categorySearch.data.data.forEach((product) => {
+        if (!productIDs.has(product.product_id)) {
+          setSearchResults((prevResults) => [
+            ...prevResults,
+            ...categorySearch.data.data,
+          ]);
+          productIDs.add(product.product_id);
+        }
+      });
+    } catch (error) {
+      console.error("Error in category search:", error);
+    }
+
+    try {
+      const descriptionSearch = await axios.get(
+        `http://localhost:5000/api/products/description/${searchCriteria.criteria}`
+      );
+      descriptionSearch.data.data.forEach((product) => {
+        if (!productIDs.has(product.product_id)) {
+          setSearchResults((prevResults) => [
+            ...prevResults,
+            ...descriptionSearch.data.data,
+          ]);
+          productIDs.add(product.product_id);
+        }
+      });
+    } catch (error) {
+      console.error("Error in description search:", error);
+    }
+  };
+
+  console.log(searchResults);
+
+  const changeHandler = (e) => {
+    setSearchCriteria({ ...searchCriteria, [e.target.name]: e.target.value });
+  };
 
   return (
     <div className="row navbar navbar-expand-xxl px-2 px-sm-4 py-4 m-3">
       <div className="d-flex align-items-center justify-content-between">
         <h1>Dealdo</h1>
-        <form>
-          <input type="text" placeholder="Search" className="searchbar" />
+        <form className="d-flex align-items-center" onSubmit={searchProducts}>
+          <input
+            type="text"
+            name="criteria"
+            placeholder="Search"
+            className="searchbar"
+            onChange={changeHandler}
+            value={searchCriteria.criteria}
+          />
+          <button type="submit" className="searchBtn">
+            Submit
+          </button>
         </form>
         <div>
-          <img src={plusIcon} className="icons me-3" onClick={() => navigate("/products/add") } alt="plus" />
-          <img src={cartIcon} className="icons me-3" onClick={cartOpen} alt="shopping cart" />
-          <img src={profileIcon} className="icons" alt="profile pic" />
+          <img
+            src={plusIcon}
+            className="icons me-3"
+            onClick={openProductForm}
+            alt="plus"
+          />
+          <img
+            src={cartIcon}
+            className="icons me-3"
+            onClick={openCart}
+            alt="shopping cart"
+          />
+          <img src={profileIcon} className="icons" onClick={openUserProducts} alt="profile pic" />
         </div>
       </div>
-      {open && <ShoppingCart isOpen={open} onClose={closeCart} />}
+      {cartOpen && <ShoppingCart isOpen={cartOpen} onClose={closeCart} />}
+      {userProductsOpen && <UserProducts isOpen={userProductsOpen} onClose={closeUserProducts} />}
+      {productFormOpen && (
+        <ProductForm
+          isOpen={productFormOpen}
+          onClose={closeProductForm}
+          initialuserID={id}
+          initialName=""
+          initialDescription=""
+          initialCategory=""
+          initialQuantity=""
+          initialPrice=""
+          initialImg_filenname=""
+        />
+      )}
     </div>
   );
 }

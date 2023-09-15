@@ -13,6 +13,7 @@ export default function ProductCard(props) {
   const [cartOpen, setCartOpen] = useState(false);
   const [reviewOpen, setReviewOpen] = useState(false);
   const [productOpen, setProductOpen] = useState(false);
+  const [productRatings, setProductRatings] = useState([]);
   // const [products, setProducts] = useState([]); 
   const { product } = props;
   const openCart = () => setCartOpen(true);
@@ -29,6 +30,7 @@ export default function ProductCard(props) {
   console.log(token);
   console.log(product.product_id);
   console.log(loggedInUser.data.user_id);
+  console.log(product);
 
   useEffect(() => {
     async function fetchData() {
@@ -43,24 +45,24 @@ export default function ProductCard(props) {
       }
     }
     fetchData();
-  }, []);
+  }, [product.user_id]);
 
-  // const productRating = () => {
-  //   let rating = 0;
-  //   let count = 0;
-  //   try {
-  //       const allProducts = axios.get("http://localhost:5000/api/products");
-  //       setProducts(allProducts.data.data);
-  //       product.reviews.forEach((review) => {
-  //         rating += review.rating;
-  //         count++;
-  //       }
-  //     );
-  //   } catch (error) {
-  //     console.error("Error getting rating", error);
-  //   } 
-  //   return rating / count
-  // }
+  const productRating = () => {
+    let rating = 0;
+    let count = 0;
+  
+    try {
+      product.reviews.forEach((review) => {
+        rating += review.rating;
+        count += 1;
+      });
+    } catch (error) {
+      console.error("Error getting ratings", error);
+    }
+    console.log(rating);
+    console.log(count);
+    return count > 0 ? rating / count : 0;
+  };
 
   const addToCart = () => {
     const data = {
@@ -84,6 +86,7 @@ export default function ProductCard(props) {
   return (
     <div className="card m-3">
       <h2 className="ms-2">{product.name}</h2>
+      
       <p className="description">{product.description}</p>
       <img
         src={`http://localhost:5000/api/img/products/${product.img_filename}`}
@@ -98,7 +101,7 @@ export default function ProductCard(props) {
       </div>
       <div className="reviewline">
         <Rating
-          initialValue={5}
+          initialValue={productRating()}
           readonly={true}
           size={20}
         />
@@ -113,7 +116,7 @@ export default function ProductCard(props) {
         </a>
       {cartOpen && <ShoppingCart cartOpen={cartOpen} closeCart={closeCart} />}
       {reviewOpen && <ReviewForm reviewOpen={reviewOpen} closeReview={closeReview} product={product} />}
-      {productOpen && <ProductInfo productOpen={productOpen} closeProduct={closeProduct} thisProduct={product} />}
+      {productOpen && <ProductInfo productOpen={productOpen} closeProduct={closeProduct} product={product} />}
     </div>
   );
 }

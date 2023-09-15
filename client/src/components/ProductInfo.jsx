@@ -8,27 +8,32 @@ import ShoppingCart from "./ShoppingCart";
 import axios from "axios";
 import "../styles/ProductInfo.css";
 import "react-responsive-modal/styles.css";
+import ProductReviews from "./ProductReviews";
 
-export default function ProductInfo({productOpen, closeProduct, thisProduct}) {
+export default function ProductInfo({ productOpen, closeProduct, product }) {
   const [productUser, setProductUser] = useState({});
   const [cartOpen, setCartOpen] = useState(false);
   const [reviewOpen, setReviewOpen] = useState(false);
-  const product = thisProduct;
+  const [productReviewsOpen, setProductReviewsOpen] = useState(false);
+  const thisProduct = product;
   const openCart = () => setCartOpen(true);
   const closeCart = () => setCartOpen(false);
   const openReview = () => setReviewOpen(true);
   const closeReview = () => setReviewOpen(false);
+  const openProductReviews = () => setProductReviewsOpen(true);
+  const closeProductReviews = () => setProductReviewsOpen(false);
   const loggedInUser = useSelector((state) => state.auth.user);
   const token = loggedInUser.token;
   const user_id = loggedInUser.data.user_id;
-  const product_id = product.product_id;
+  const product_id = thisProduct.product_id;
   console.log(product);
+  console.log(thisProduct);
 
   useEffect(() => {
     async function fetchData() {
       try {
         const response = await fetch(
-          `http://localhost:5000/api/users/${product.user_id}`
+          `http://localhost:5000/api/users/${thisProduct.user_id}`
         );
         const data = await response.json();
         setProductUser(data.data);
@@ -39,22 +44,22 @@ export default function ProductInfo({productOpen, closeProduct, thisProduct}) {
     fetchData();
   }, []);
 
-  //   const productRating = () => {
-  //     let rating = 0;
-  //     let count = 0;
-  //     try {
-  //         const allProducts = axios.get("http://localhost:5000/api/products");
-  //         setProducts(allProducts.data.data);
-  //         product.reviews.forEach((review) => {
-  //           rating += review.rating;
-  //           count++;
-  //         }
-  //       );
-  //     } catch (error) {
-  //       console.error("Error getting rating", error);
-  //     }
-  //     return rating / count
-  //   }
+  const productRating = () => {
+    let rating = 0;
+    let count = 0;
+
+    try {
+      thisProduct.reviews.forEach((review) => {
+        rating += review.rating;
+        count += 1;
+      });
+    } catch (error) {
+      console.error("Error getting ratings", error);
+    }
+    console.log(rating);
+    console.log(count);
+    return count > 0 ? rating / count : 0;
+  };
 
   const addToCart = () => {
     const data = {
@@ -76,28 +81,28 @@ export default function ProductInfo({productOpen, closeProduct, thisProduct}) {
   };
 
   return (
-      <Modal
-        open={productOpen}
-        onClose={closeProduct}
-        center={true}
-        classNames={{
-          overlayAnimationIn: "enterOverlay",
-          overlayAnimationOut: "leaveOverlay",
-          modalAnimationIn: "enterModal",
-          modalAnimationOut: "leaveModal",
-        }}
-        animationDuration={800}
-      >
-        <div className="productModalBody">
-        <h2 className="ms-2">{product.name}</h2>
-        <p className="fullDescription">{product.description}</p>
+    <Modal
+      open={productOpen}
+      onClose={closeProduct}
+      center={true}
+      classNames={{
+        overlayAnimationIn: "enterOverlay",
+        overlayAnimationOut: "leaveOverlay",
+        modalAnimationIn: "enterModal",
+        modalAnimationOut: "leaveModal",
+      }}
+      animationDuration={800}
+    >
+      <div className="productModalBody">
+        <h2 className="ms-2">{thisProduct.name}</h2>
+        <p className="fullDescription">{thisProduct.description}</p>
         <img
-          src={`http://localhost:5000/api/img/products/${product.img_filename}`}
+          src={`http://localhost:5000/api/img/products/${thisProduct.img_filename}`}
           className="image"
           alt="product"
         />
         <div className="priceline">
-          <p className="price align-baseline">${product.price}</p>
+          <p className="price align-baseline">${thisProduct.price}</p>
           <button
             className="btn btn-warning align-baseline"
             onClick={addToCart}
@@ -106,16 +111,46 @@ export default function ProductInfo({productOpen, closeProduct, thisProduct}) {
           </button>
         </div>
         <div className="reviewline">
-          <Rating initialValue={5} readonly={true} size={20} />
-          <a href="#" className="primary" onClick={openReview}>
+          <Rating initialValue={productRating()} readonly={true} size={20} />
+          <a
+            href="#"
+            className="primary"
+            onClick={(e) => {
+              e.preventDefault();
+              openReview();
+            }}
+          >
             Leave Review
           </a>
         </div>
+        <a
+          href="#"
+          className="primary"
+          onClick={(e) => {
+            e.preventDefault();
+            openProductReviews();
+          }}
+        >
+          See Reviews
+        </a>
         <p className="soldby">SOLD BY:</p>
         <p className="user">{productUser.first_name}</p>
-        </div>
-        {cartOpen && <ShoppingCart cartOpen={cartOpen} closeCart={closeCart} />}
-        {reviewOpen && <ReviewForm reviewOpen={reviewOpen} closeReview={closeReview} product={product} />}
-      </Modal>
+      </div>
+      {cartOpen && <ShoppingCart cartOpen={cartOpen} closeCart={closeCart} />}
+      {reviewOpen && (
+        <ReviewForm
+          reviewOpen={reviewOpen}
+          closeReview={closeReview}
+          product={product}
+        />
+      )}
+      {productReviewsOpen && (
+        <ProductReviews
+          productReviewsOpen={productReviewsOpen}
+          closeProductReviews={closeProductReviews}
+          product={thisProduct}
+        />
+      )}
+    </Modal>
   );
 }

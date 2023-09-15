@@ -1,0 +1,54 @@
+.ReviewsModalBody {
+    width: 800px;
+    height: 800px;
+  }
+
+  .reviewImg {
+    width: 50%;
+    max-width: 150px;
+    height: 50%;
+    object-fit: cover;
+  }
+
+  .review {
+    border-top: 2px solid #000000;
+  }
+
+  .reviewName {
+    margin-top: 5px;
+    font-weight: bold;
+  }
+
+  @keyframes enterOverlay {
+      0% {
+        transform: scale(0);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+    @keyframes leaveOverlay {
+      0% {
+        transform: scale(1);
+      }
+      100% {
+        transform: scale(0);
+      }
+    }
+    
+    @keyframes enterModal {
+      0% {
+        transform: scale(0.2);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+    @keyframes leaveModal {
+      0% {
+        transform: scale(1);
+      }
+      100% {
+        transform: scale(0.2);
+      }
+    }
