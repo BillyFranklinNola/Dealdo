@@ -7,13 +7,14 @@ import axios from "axios";
 import ReviewForm from "./ReviewForm";
 import { Rating } from "react-simple-star-rating";
 import ProductInfo from "./ProductInfo";
+import EditProduct from "../views/EditProduct";
 
 export default function ProductCard(props) {
   const [productUser, setProductUser] = useState({});
   const [cartOpen, setCartOpen] = useState(false);
   const [reviewOpen, setReviewOpen] = useState(false);
   const [productOpen, setProductOpen] = useState(false);
-  const [productRatings, setProductRatings] = useState([]);
+  const [editProductOpen, setEditProductOpen] = useState(false);
   // const [products, setProducts] = useState([]); 
   const { product } = props;
   const openCart = () => setCartOpen(true);
@@ -22,6 +23,8 @@ export default function ProductCard(props) {
   const closeReview = () => setReviewOpen(false);
   const openProduct = () => setProductOpen(true);
   const closeProduct = () => setProductOpen(false);
+  const openEditProduct = () => setEditProductOpen(true);
+  const closeEditProduct = () => setEditProductOpen(false);
   const loggedInUser = useSelector((state) => state.auth.user);
   const token = loggedInUser.token;
   const user_id = loggedInUser.data.user_id;
@@ -114,9 +117,13 @@ export default function ProductCard(props) {
       <a href="#" className="primary mx-auto" onClick={(e) => {e.preventDefault(); openProduct()}}>
           More Details
         </a>
+        <a href="#" className="primary mx-auto" onClick={(e) => {e.preventDefault(); openEditProduct()}}>
+          Edit
+        </a>
       {cartOpen && <ShoppingCart cartOpen={cartOpen} closeCart={closeCart} />}
       {reviewOpen && <ReviewForm reviewOpen={reviewOpen} closeReview={closeReview} product={product} />}
       {productOpen && <ProductInfo productOpen={productOpen} closeProduct={closeProduct} product={product} />}
+      {editProductOpen && <EditProduct editProductOpen={editProductOpen} closeEditProduct={closeEditProduct} product={product} />}
     </div>
   );
 }

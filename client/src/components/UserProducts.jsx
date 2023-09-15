@@ -6,7 +6,7 @@ import axios from "axios";
 import ProductCard from "./ProductCard";
 import { useSelector } from 'react-redux'
 
-function UserProducts({userProductsOpen, closeUserProducts}) {
+function UserProducts({isOpen, onClose}) {
   const [userProducts, setUserProducts] = useState([]);
   const loggedInUser = useSelector((state) => state.auth.user);
   const user_id = loggedInUser.data.user_id;
@@ -23,12 +23,12 @@ function UserProducts({userProductsOpen, closeUserProducts}) {
       }
     }
     getUserProducts();
-  }, []);
+  }, [user_id]);
 
   return (
     <Modal
-        open={userProductsOpen}
-        onClose={closeUserProducts}
+        open={isOpen}
+        onClose={onClose}
         center={true}
         classNames={{
           overlayAnimationIn: 'enterOverlay',

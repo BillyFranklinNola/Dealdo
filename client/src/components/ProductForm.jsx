@@ -1,119 +1,47 @@
-import axios from "axios";
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import Modal from "react-responsive-modal";
 import "react-responsive-modal/styles.css";
-import "../styles/ProductForm.css";
 
-const ProductForm = ({
-  isOpen,
-  onClose,
-  initialuserID,
-  initialName,
-  initialDescription,
-  initialCategory,
-  initialQuantity,
-  initialPrice,
-  initialImg_filenname
-}) => {
-  const navigate = useNavigate();
-  const [product, setProduct] = useState({});
-  const [allProducts, setAllProducts] = useState([]);
+const ProductForm = ({onSubmit, ...props}) => {
   const user = JSON.parse(localStorage.getItem("user"));
   const token = user.token;
   console.log(token);
 
-  const [formState, setFormState] = useState({
+  const {
+    initialuserID,
+    initialName,
+    initialDescription,
+    initialCategory,
+    initialQuantity,
+    initialPrice,
+    initialImg_filenname,
+    initialProductID
+  } = props;
+
+  const [productData, setproductData] = useState({
     userID: initialuserID,
     name: initialName,
     description: initialDescription,
     category: initialCategory,
     quantity: initialQuantity,
     price: initialPrice,
-    img_filenname: initialImg_filenname,
-    isSubmitted: false,
+    image: initialImg_filenname,
+    id: initialProductID ? initialProductID : null,
   });
 
-  const { userID, name, description, category, quantity, price } = formState;
-
   const changeHandler = (e) => {
-    if (e.target.name === "image") {
-      setFormState({
-        ...formState,
-        [e.target.name]: e.target.files[0],
-      });
-    } else {
-      setFormState({
-        ...formState,
+      setproductData({
+        ...productData,
         [e.target.name]: e.target.value,
       });
-      console.log(formState);
-    }
+      console.log(productData);
   };
 
   const onSubmitHandler = async (e) => {
     e.preventDefault();
-    const productData = {
-      userID,
-      name,
-      description,
-      category,
-      quantity,
-      price,
-    };
-    try {
-      const newProduct = await axios.post(
-        "http://localhost:5000/api/products/create",
-        productData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      console.log(newProduct.data.data);
-      const formData = new FormData();
-      formData.append("file", formState.image);
-      formData.append("product_id", newProduct.data.data.product_id);
-      try {
-        const newImage = await axios.post(
-          `http://localhost:5000/api/img/products/upload`,
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        console.log(newImage);
-      } catch (error) {
-        console.log(error);
-      }
-      setProduct(newProduct.data.data);
-      setAllProducts([...allProducts, newProduct.data.product]);
-      toast.success("Product added successfully!");
-      navigate("/products");
-    } catch (error) {
-      console.log(error);
-      toast.error("Error adding product!");
-    }
-  };
+    onSubmit(productData);
+  }
 
   return (
-    <Modal
-      open={isOpen}
-      onClose={onClose}
-      center={true}
-      classNames={{
-        overlayAnimationIn: "enterOverlay",
-        overlayAnimationOut: "leaveOverlay",
-        modalAnimationIn: "enterModal",
-        modalAnimationOut: "leaveModal",
-      }}
-      animationDuration={800}
-    >
       <div className="container-fluid">
         <div className="panelBackground text-secondary mx-auto p-3 border border-2 border-dark rounded">
           <form className="mx-auto" onSubmit={onSubmitHandler}>
@@ -122,7 +50,7 @@ const ProductForm = ({
                 htmlFor="name"
                 className="col-4 col-lg-3 col-form-label me-2"
               >
-                Product Title:
+                Title:
               </label>
               <div className="col-7 col-lg-8">
                 <input
@@ -165,19 +93,13 @@ const ProductForm = ({
                   className="form-control"
                   onChange={changeHandler}
                 >
-                  <option value="" disabled selected>
-                    Select a category
-                  </option>
+                  <option value="" disabled selected>Select a category</option>
                   <option value="home_and_garden">Home and Garden</option>
                   <option value="electronics">Electronics</option>
-                  <option value="health_and_wellness">
-                    Health and Wellness
-                  </option>
+                  <option value="health_and_wellness">Health and Wellness</option>
                   <option value="automotive">Automotive</option>
                   <option value="pet_care">Pet Care</option>
-                  <option value="clothing_and_apparel">
-                    Clothing and Apparel
-                  </option>
+                  <option value="clothing_and_apparel">Clothing and Apparel</option>
                   <option value="musical_equipment">Musical Equipment</option>
                   <option value="arts_and_crafts">Arts and Crafts</option>
                 </select>
@@ -242,7 +164,6 @@ const ProductForm = ({
           </form>
         </div>
       </div>
-    </Modal>
   );
 };
 

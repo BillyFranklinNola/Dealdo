@@ -42,7 +42,7 @@ export default function ProductInfo({ productOpen, closeProduct, product }) {
       }
     }
     fetchData();
-  }, []);
+  }, [thisProduct.user_id]);
 
   const productRating = () => {
     let rating = 0;

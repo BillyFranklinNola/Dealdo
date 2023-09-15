@@ -5,8 +5,7 @@ import RegisterScreen from './views/RegisterScreen';
 import LoginScreen from './views/LoginScreen';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import AddProductScreen from './views/AddProductScreen';
-
+import SearchResults from './views/SearchResults';
 
 
 function App() {
@@ -32,9 +31,9 @@ function App() {
           }
         />
         <Route
-          path='/products/add'
+          path='/results'
           element={
-            <AddProductScreen/>
+            <SearchResults/>
           }
         />
       </Routes>

@@ -31,7 +31,7 @@ function ShoppingCart({cartOpen, closeCart}) {
       }
     }
     getActiveProducts();
-  }, []);
+  }, [token, user_id]);
 
   return (
     <Modal

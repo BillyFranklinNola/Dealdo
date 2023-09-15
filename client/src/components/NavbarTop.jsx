@@ -8,10 +8,11 @@ import ShoppingCart from "./ShoppingCart";
 import axios from "axios";
 import ProductForm from "./ProductForm";
 import UserProducts from "./UserProducts"
+import CreateProductModal from "../views/CreateProductModal";
 
 export default function NavbarTop() {
   const [cartOpen, setCartOpen] = useState(false);
-  const [productFormOpen, setProductFormOpen] = useState(false);
+  const [createProductOpen, setCreateProductOpen] = useState(false);
   const [userProductsOpen, setUserProductsOpen] = useState(false);
   const [searchCriteria, setSearchCriteria] = useState({ criteria: "" });
   const [searchResults, setSearchResults] = useState([]);
@@ -21,8 +22,8 @@ export default function NavbarTop() {
 
   const openCart = () => setCartOpen(true);
   const closeCart = () => setCartOpen(false);
-  const openProductForm = () => setProductFormOpen(true);
-  const closeProductForm = () => setProductFormOpen(false);
+  const openCreateProduct = () => setCreateProductOpen(true);
+  const closeCreateProduct = () => setCreateProductOpen(false);
   const openUserProducts = () => setUserProductsOpen(true);
   const closeUserProducts = () => setUserProductsOpen(false);
 
@@ -112,7 +113,7 @@ export default function NavbarTop() {
           <img
             src={plusIcon}
             className="icons me-3"
-            onClick={openProductForm}
+            onClick={openCreateProduct}
             alt="plus"
           />
           <img
@@ -126,19 +127,7 @@ export default function NavbarTop() {
       </div>
       {cartOpen && <ShoppingCart isOpen={cartOpen} onClose={closeCart} />}
       {userProductsOpen && <UserProducts isOpen={userProductsOpen} onClose={closeUserProducts} />}
-      {productFormOpen && (
-        <ProductForm
-          isOpen={productFormOpen}
-          onClose={closeProductForm}
-          initialuserID={id}
-          initialName=""
-          initialDescription=""
-          initialCategory=""
-          initialQuantity=""
-          initialPrice=""
-          initialImg_filenname=""
-        />
-      )}
+      {createProductOpen && <CreateProductModal isOpen={createProductOpen} onClose={closeCreateProduct} />}
     </div>
   );
 }
