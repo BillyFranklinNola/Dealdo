@@ -3,7 +3,7 @@ import Modal from 'react-responsive-modal';
 import '../styles/UserProducts.css'
 import 'react-responsive-modal/styles.css'
 import axios from "axios";
-import ProductCard from "./ProductCard";
+import ProductCard from "../components/ProductCard";
 import { useSelector } from 'react-redux'
 
 function UserProducts({isOpen, onClose}) {

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import "../styles/ProductCard.css";
-import ShoppingCart from "./ShoppingCart";
+import ShoppingCart from "../views/ShoppingCart";
 import axios from "axios";
 import ReviewForm from "./ReviewForm";
 import { Rating } from "react-simple-star-rating";

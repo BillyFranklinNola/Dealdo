@@ -4,11 +4,11 @@ import { toast } from "react-toastify";
 import ReviewForm from "./ReviewForm";
 import { Rating } from "react-simple-star-rating";
 import Modal from "react-responsive-modal";
-import ShoppingCart from "./ShoppingCart";
+import ShoppingCart from "../views/ShoppingCart";
 import axios from "axios";
 import "../styles/ProductInfo.css";
 import "react-responsive-modal/styles.css";
-import ProductReviews from "./ProductReviews";
+import ProductReviews from "../views/ProductReviews";
 
 export default function ProductInfo({ productOpen, closeProduct, product }) {
   const [productUser, setProductUser] = useState({});

@@ -4,11 +4,11 @@ import profileIcon from "../images/profileIcon.png";
 import plusIcon from "../images/plusIcon.png";
 import { useSelector } from 'react-redux'
 import "../styles/NavbarTop.css";
-import ShoppingCart from "./ShoppingCart";
+import ShoppingCart from "../views/ShoppingCart";
 import axios from "axios";
-import ProductForm from "./ProductForm";
-import UserProducts from "./UserProducts"
 import CreateProductModal from "../views/CreateProductModal";
+import UserProducts from "../views/UserProducts";
+
 
 export default function NavbarTop() {
   const [cartOpen, setCartOpen] = useState(false);
@@ -17,7 +17,6 @@ export default function NavbarTop() {
   const [searchCriteria, setSearchCriteria] = useState({ criteria: "" });
   const [searchResults, setSearchResults] = useState([]);
   const loggedInUser = useSelector((state) => state.auth.user);
-  const id = loggedInUser.data.user_id;
   console.log(searchCriteria);
 
   const openCart = () => setCartOpen(true);
@@ -125,8 +124,8 @@ export default function NavbarTop() {
           <img src={profileIcon} className="icons" onClick={openUserProducts} alt="profile pic" />
         </div>
       </div>
-      {cartOpen && <ShoppingCart isOpen={cartOpen} onClose={closeCart} />}
       {userProductsOpen && <UserProducts isOpen={userProductsOpen} onClose={closeUserProducts} />}
+      {cartOpen && <ShoppingCart isOpen={cartOpen} onClose={closeCart} />}
       {createProductOpen && <CreateProductModal isOpen={createProductOpen} onClose={closeCreateProduct} />}
     </div>
   );
