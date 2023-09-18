@@ -4,6 +4,8 @@ import ProductCard from "./ProductCard";
 
 function ProductList() {
   const [products, setProducts] = useState([]);
+  const [refreshKey, setRefreshKey] = useState(0);
+
 
   useEffect(() => {
     async function fetchData() {
@@ -17,7 +19,7 @@ function ProductList() {
       }
     }
     fetchData();
-  }, []);
+  }, [refreshKey]);
 
   return (
     <div>

@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { register } from "../slices/authSlice";
 
-const UserForm = (props) => {
+const UserForm = (onSubmit, ...props) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const {
@@ -16,7 +16,7 @@ const UserForm = (props) => {
     initialConfirm_password,
   } = props;
 
-  const [formState, setFormState] = useState({
+  const [userData, setuserData] = useState({
     first_name: initialFirst_name,
     last_name: initialLast_name,
     email: initialEmail,
@@ -26,12 +26,10 @@ const UserForm = (props) => {
     isSubmitted: false,
   });
 
-  const { first_name, last_name, email, address, password, confirm_password } = formState;
-
   const { isLoading, isSuccess } = useSelector((state) => state.auth);
 
   const changeHandler = (e) => {
-    setFormState((prevState) => ({
+    setuserData((prevState) => ({
       ...prevState,
       [e.target.name]: e.target.value,
     }));
@@ -39,18 +37,12 @@ const UserForm = (props) => {
 
   const onSubmitHandler = async (e) => {
     e.preventDefault();
-    const userData = {
-      first_name,
-      last_name,
-      email,
-      address,
-      password,
-      confirm_password,
-    };
+    onSubmit(userData)
+    
     const response = await dispatch(register(userData));
     if (isSuccess) {
       console.log(response.payload);
-      setFormState((prevState) => ({
+      setuserData((prevState) => ({
         ...prevState,
         isSubmitted: true,
       }));

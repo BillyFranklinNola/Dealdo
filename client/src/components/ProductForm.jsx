@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import "react-responsive-modal/styles.css";
+import  { useSelector } from 'react-redux'
 
-const ProductForm = ({onSubmit, ...props}) => {
-  const user = JSON.parse(localStorage.getItem("user"));
-  const token = user.token;
+const ProductForm = ({onSubmit, isEditing, ...props}) => {
+  const loggedInUser = useSelector((state) => state.auth.user);
+  const token = loggedInUser.token;
   console.log(token);
+
 
   const {
     initialuserID,
@@ -57,6 +59,7 @@ const ProductForm = ({onSubmit, ...props}) => {
                   type="text"
                   name="name"
                   id="name"
+                  value={productData.name? productData.name : null}
                   className="form-control"
                   onChange={changeHandler}
                 />
@@ -74,6 +77,7 @@ const ProductForm = ({onSubmit, ...props}) => {
                   type="text"
                   name="description"
                   id="description"
+                  value={productData.description ? productData.description : null}
                   className="form-control"
                   onChange={changeHandler}
                 />
@@ -90,6 +94,7 @@ const ProductForm = ({onSubmit, ...props}) => {
                 <select
                   name="category"
                   id="category"
+                  value={productData.category? productData.category : null}
                   className="form-control"
                   onChange={changeHandler}
                 >
@@ -102,6 +107,7 @@ const ProductForm = ({onSubmit, ...props}) => {
                   <option value="clothing_and_apparel">Clothing and Apparel</option>
                   <option value="musical_equipment">Musical Equipment</option>
                   <option value="arts_and_crafts">Arts and Crafts</option>
+                  <option value="toys_and_games">Toys and Games</option>
                 </select>
               </div>
             </div>
@@ -117,6 +123,7 @@ const ProductForm = ({onSubmit, ...props}) => {
                   type="number"
                   name="quantity"
                   id="quantity"
+                  value={productData.quantity? productData.quantity : null}
                   className="form-control"
                   onChange={changeHandler}
                 />
@@ -134,12 +141,14 @@ const ProductForm = ({onSubmit, ...props}) => {
                   type="number"
                   name="price"
                   id="price"
+                  value={productData.price? productData.price : null}
                   pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$"
                   className="form-control"
                   onChange={changeHandler}
                 />
               </div>
             </div>
+            { !isEditing ?
             <div className="row form-group align-items-center mt-4">
               <label
                 htmlFor="image"
@@ -158,6 +167,8 @@ const ProductForm = ({onSubmit, ...props}) => {
                 />
               </div>
             </div>
+            : null
+            }
             <button input type="submit" className="btn btn-warning mt-4 mb-3">
               Submit
             </button>

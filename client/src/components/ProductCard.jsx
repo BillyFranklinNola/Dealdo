@@ -15,7 +15,6 @@ export default function ProductCard(props) {
   const [reviewOpen, setReviewOpen] = useState(false);
   const [productOpen, setProductOpen] = useState(false);
   const [editProductOpen, setEditProductOpen] = useState(false);
-  // const [products, setProducts] = useState([]); 
   const { product } = props;
   const openCart = () => setCartOpen(true);
   const closeCart = () => setCartOpen(false);
@@ -29,11 +28,6 @@ export default function ProductCard(props) {
   const token = loggedInUser.token;
   const user_id = loggedInUser.data.user_id;
   const product_id = product.product_id;
-
-  console.log(token);
-  console.log(product.product_id);
-  console.log(loggedInUser.data.user_id);
-  console.log(product);
 
   useEffect(() => {
     async function fetchData() {
@@ -67,24 +61,49 @@ export default function ProductCard(props) {
     return count > 0 ? rating / count : 0;
   };
 
-  const addToCart = () => {
+  const addToCart = async () => {
     const data = {
       product_id: product_id,
       user_id: user_id,
       quantity_to_purchase: 1,
     };
+  
     try {
-      axios.put("http://localhost:5000/api/carts/add_product", data, {
+      const response = await axios.put(
+        "http://localhost:5000/api/carts/add_product",
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+  
+      if (response.status === 200) {
+        toast.success("Product added to cart!");
+        openCart();
+      } else {
+        toast.error("Not enough inventory, please choose a different product.");
+      }
+    } catch (error) {
+      console.error("Error adding product to cart:", error);
+      toast.error("Not enough inventory, please choose a different.");
+    }
+  };
+  
+
+  const deleteProduct = () => {
+    try {
+      axios.delete(`http://localhost:5000/api/products/delete/${product.product_id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      toast.success("Product added to cart!");
-      openCart();
+      toast.success("Product deleted!");
     } catch (error) {
-      console.error("Error adding product to cart:", error);
+      console.log("Error deleting product", error)
     }
-  };
+  }
 
   return (
     <div className="card m-3">
@@ -117,9 +136,18 @@ export default function ProductCard(props) {
       <a href="#" className="primary mx-auto" onClick={(e) => {e.preventDefault(); openProduct()}}>
           More Details
         </a>
+        {
+          product.user_id === loggedInUser.data.user_id ?
+        <div>
         <a href="#" className="primary mx-auto" onClick={(e) => {e.preventDefault(); openEditProduct()}}>
           Edit
         </a>
+        <a href="#" className="primary mx-auto" onClick={(e) => {e.preventDefault(); deleteProduct()}} >
+          Delete
+        </a>
+        </div>
+        : null
+        }
       {cartOpen && <ShoppingCart cartOpen={cartOpen} closeCart={closeCart} />}
       {reviewOpen && <ReviewForm reviewOpen={reviewOpen} closeReview={closeReview} product={product} />}
       {productOpen && <ProductInfo productOpen={productOpen} closeProduct={closeProduct} product={product} />}

@@ -31,7 +31,6 @@ const LoginForm = (props) => {
         try {
             const userData = await dispatch(login(loginData));
             console.log(userData);
-            toast.success('Login Successful');
             navigate('/products');
             // const isAdmin = userData.payload.user.isAdmin;
             // console.log(isAdmin);

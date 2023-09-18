@@ -7,12 +7,15 @@ import "../styles/CreateProductModal.css";
 import ProductForm from '../components/ProductForm';
 import { useSelector } from 'react-redux'
 
-export default function CreateProductModal({isOpen, onClose}) {
+export default function CreateProduct({isOpen, onClose}) {
     const loggedInUser = useSelector((state) => state.auth.user);
-    const token = loggedInUser.data.token;
+    const token = loggedInUser.token;
+
     const createProduct = async (product) => {
-    const { userID, name, description, category, quantity, price } = product;
+    const { userID, name, description, category, quantity, price, image } = product;
     const productData = {userID, name, description, category, quantity, price};
+    console.log(image)
+    console.log(token)
       try {
         const newProduct = await axios.post(
           "http://localhost:5000/api/products/create",
@@ -25,7 +28,7 @@ export default function CreateProductModal({isOpen, onClose}) {
         );
         console.log(newProduct.data.data);
         const formData = new FormData();
-        formData.append("file", productData.image);
+        formData.append("file", image);
         formData.append("product_id", newProduct.data.data.product_id);
         try {
           const newImage = await axios.post(
@@ -62,7 +65,7 @@ export default function CreateProductModal({isOpen, onClose}) {
     }}
     animationDuration={800}
   >
-    <ProductForm onSubmit={createProduct} initialuserID="" initialName="" initialDescription="" initialCategory="" initialQuantity="" initialPrice="" initialImg_filenname=""/>
+    <ProductForm onSubmit={createProduct} isEditing={false} initialuserID="" initialName="" initialDescription="" initialCategory="" initialQuantity="" initialPrice="" initialImg_filenname=""/>
   </Modal>
   );
 }

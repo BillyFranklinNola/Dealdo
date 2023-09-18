@@ -1,14 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import cartIcon from "../images/cartIcon.png";
 import profileIcon from "../images/profileIcon.png";
 import plusIcon from "../images/plusIcon.png";
-import { useSelector } from 'react-redux'
 import "../styles/NavbarTop.css";
 import ShoppingCart from "../views/ShoppingCart";
 import axios from "axios";
-import CreateProductModal from "../views/CreateProductModal";
 import UserProducts from "../views/UserProducts";
-
+import CreateProduct from "../views/CreateProduct";
+import { toast } from "react-toastify";
 
 export default function NavbarTop() {
   const [cartOpen, setCartOpen] = useState(false);
@@ -16,7 +16,7 @@ export default function NavbarTop() {
   const [userProductsOpen, setUserProductsOpen] = useState(false);
   const [searchCriteria, setSearchCriteria] = useState({ criteria: "" });
   const [searchResults, setSearchResults] = useState([]);
-  const loggedInUser = useSelector((state) => state.auth.user);
+  const navigate = useNavigate();
   console.log(searchCriteria);
 
   const openCart = () => setCartOpen(true);
@@ -26,66 +26,49 @@ export default function NavbarTop() {
   const openUserProducts = () => setUserProductsOpen(true);
   const closeUserProducts = () => setUserProductsOpen(false);
 
-
   const searchProducts = async (e) => {
     e.preventDefault();
-
+    setSearchResults([]);
+    let hasError = false;
+  
+    if (!searchCriteria.criteria) {
+      toast.error("Please enter search criteria");
+      return;
+    }
+  
     const productIDs = new Set();
-
     try {
-      const nameSearch = await axios.get(
-        `http://localhost:5000/api/products/name/${searchCriteria.criteria}`
-      );
-      nameSearch.data.data.forEach((product) => {
-        if (!productIDs.has(product.product_id)) {
-          setSearchResults((prevResults) => [
-            ...prevResults,
-            ...nameSearch.data.data,
-          ]);
-          productIDs.add(product.product_id);
-        }
+      const [nameSearch, categorySearch, descriptionSearch] = await Promise.all([
+        axios.get(`http://localhost:5000/api/products/name/${searchCriteria.criteria}`),
+        axios.get(`http://localhost:5000/api/products/category/${searchCriteria.criteria}`),
+        axios.get(`http://localhost:5000/api/products/description/${searchCriteria.criteria}`)
+      ]);
+  
+      [nameSearch, categorySearch, descriptionSearch].forEach((search) => {
+        search.data.data.forEach((product) => {
+          if (!productIDs.has(product.product_id)) {
+            setSearchResults((prevResults) => [
+              ...prevResults,
+              ...search.data.data,
+            ]);
+            productIDs.add(product.product_id);
+          }
+        });
       });
-      console.log("Name search successful");
+      navigate('/results', {state: {searchResults}})
     } catch (error) {
-      console.error("Error in name search:", error);
+      console.error("Error in search:", error);
+      toast.error("An error occurred while searching.");
+      hasError = true;
     }
-
-    try {
-      const categorySearch = await axios.get(
-        `http://localhost:5000/api/products/category/${searchCriteria.criteria}`
-      );
-      categorySearch.data.data.forEach((product) => {
-        if (!productIDs.has(product.product_id)) {
-          setSearchResults((prevResults) => [
-            ...prevResults,
-            ...categorySearch.data.data,
-          ]);
-          productIDs.add(product.product_id);
-        }
-      });
-    } catch (error) {
-      console.error("Error in category search:", error);
-    }
-
-    try {
-      const descriptionSearch = await axios.get(
-        `http://localhost:5000/api/products/description/${searchCriteria.criteria}`
-      );
-      descriptionSearch.data.data.forEach((product) => {
-        if (!productIDs.has(product.product_id)) {
-          setSearchResults((prevResults) => [
-            ...prevResults,
-            ...descriptionSearch.data.data,
-          ]);
-          productIDs.add(product.product_id);
-        }
-      });
-    } catch (error) {
-      console.error("Error in description search:", error);
+  
+    if (!hasError && searchResults.length === 0) {
+      toast.error("No results, please refine your search");
+      navigate("/products");
     }
   };
-
-  console.log(searchResults);
+  
+  
 
   const changeHandler = (e) => {
     setSearchCriteria({ ...searchCriteria, [e.target.name]: e.target.value });
@@ -121,12 +104,23 @@ export default function NavbarTop() {
             onClick={openCart}
             alt="shopping cart"
           />
-          <img src={profileIcon} className="icons" onClick={openUserProducts} alt="profile pic" />
+          <img
+            src={profileIcon}
+            className="icons"
+            onClick={openUserProducts}
+            alt="profile pic"
+          />
         </div>
       </div>
-      {userProductsOpen && <UserProducts isOpen={userProductsOpen} onClose={closeUserProducts} />}
-      {cartOpen && <ShoppingCart isOpen={cartOpen} onClose={closeCart} />}
-      {createProductOpen && <CreateProductModal isOpen={createProductOpen} onClose={closeCreateProduct} />}
+      {userProductsOpen && (
+        <UserProducts isOpen={userProductsOpen} onClose={closeUserProducts} />
+      )}
+      {cartOpen && ( 
+        <ShoppingCart isOpen={cartOpen} onClose={closeCart} />
+      )}
+      {createProductOpen && (
+        <CreateProduct isOpen={createProductOpen} onClose={closeCreateProduct} />
+      )}
     </div>
   );
 }
