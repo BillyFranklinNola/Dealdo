@@ -1,6 +1,6 @@
 import React from 'react'
-import ProductCard from '../components/ProductCard';
 import { useLocation } from 'react-router-dom';
+import ProductCard from '../components/ProductCard';
 import NavbarTop from '../components/NavbarTop';
 
 export default function SearchResults() {
@@ -8,6 +8,7 @@ export default function SearchResults() {
   const searchResults = location.state?.searchResults || [];
   console.log(location.state)
   console.log(searchResults)
+  
   return (
     <div>
       <NavbarTop/>

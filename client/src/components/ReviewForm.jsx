@@ -1,13 +1,13 @@
 import React, {useState} from "react";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import axios from "axios";
 import Modal from "react-responsive-modal";
 import StarRating from "./StarRating";
-import axios from "axios";
 import "react-responsive-modal/styles.css";
 import "../styles/ReviewForm.css";
 
-export default function ReviewForm({ reviewOpen, closeReview, product }) {
+const ReviewForm = ({ reviewOpen, closeReview, product }) => {
   const thisProduct = product;
   const [reviewData, setReviewData] = useState({});
   const loggedInUser = useSelector((state) => state.auth.user);
@@ -38,12 +38,11 @@ export default function ReviewForm({ reviewOpen, closeReview, product }) {
       });
       toast.success("Review submitted!");
       closeReview();
+      window.location.reload();
     } catch (error) {
       console.error("Error submitting review:", error);
     }
   };
-
-
 
   return (
     <div className="modalBody">
@@ -92,3 +91,5 @@ export default function ReviewForm({ reviewOpen, closeReview, product }) {
     </div>
   );
 }
+
+export default ReviewForm;

@@ -1,14 +1,13 @@
 import React from "react";
+import { Rating } from "react-simple-star-rating";
+import { format } from 'date-fns'
 import Modal from "react-responsive-modal";
 import "../styles/ProductReviews.css";
 import "react-responsive-modal/styles.css";
-import { Rating } from "react-simple-star-rating";
-import {format} from 'date-fns'
 
-function ProductReviews({ productReviewsOpen, closeProductReviews, product }) {
+const ProductReviews = ({ productReviewsOpen, closeProductReviews, product }) => {
   const thisProduct = product;
   console.log(thisProduct.reviews);
-
 
   function formatDateTime(dateTime) {
     const date = new Date(dateTime);

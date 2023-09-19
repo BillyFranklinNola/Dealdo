@@ -1,12 +1,11 @@
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import "react-responsive-modal/styles.css";
-import  { useSelector } from 'react-redux'
 
-const ProductForm = ({onSubmit, isEditing, ...props}) => {
+const ProductForm = ({ onSubmit, onImageChange, isEditing, ...props }) => {
   const loggedInUser = useSelector((state) => state.auth.user);
   const token = loggedInUser.token;
   console.log(token);
-
 
   const {
     initialuserID,
@@ -15,33 +14,46 @@ const ProductForm = ({onSubmit, isEditing, ...props}) => {
     initialCategory,
     initialQuantity,
     initialPrice,
-    initialImg_filenname,
     initialProductID
   } = props;
 
-  const [productData, setproductData] = useState({
+  const [product, setProduct] = useState({
     userID: initialuserID,
     name: initialName,
     description: initialDescription,
     category: initialCategory,
     quantity: initialQuantity,
     price: initialPrice,
-    image: initialImg_filenname,
-    id: initialProductID ? initialProductID : null,
+    image: null,
+    product_id: initialProductID ? initialProductID : null,
   });
 
+  console.log(product);
+
   const changeHandler = (e) => {
-      setproductData({
-        ...productData,
-        [e.target.name]: e.target.value,
-      });
-      console.log(productData);
+    try {
+      if (e.target.name === "image") {
+        const file = e.target.files[0];
+        setProduct({
+          ...product,
+          image: file,
+        });
+      } else {
+        setProduct({
+          ...product,
+          [e.target.name]: e.target.value,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const onSubmitHandler = async (e) => {
     e.preventDefault();
-    onSubmit(productData);
-  }
+    console.log(product);
+    onSubmit(product);
+  };
 
   return (
       <div className="container-fluid">
@@ -59,7 +71,7 @@ const ProductForm = ({onSubmit, isEditing, ...props}) => {
                   type="text"
                   name="name"
                   id="name"
-                  value={productData.name? productData.name : null}
+                  value={product.name? product.name : null}
                   className="form-control"
                   onChange={changeHandler}
                 />
@@ -77,7 +89,7 @@ const ProductForm = ({onSubmit, isEditing, ...props}) => {
                   type="text"
                   name="description"
                   id="description"
-                  value={productData.description ? productData.description : null}
+                  value={product.description ? product.description : null}
                   className="form-control"
                   onChange={changeHandler}
                 />
@@ -94,7 +106,7 @@ const ProductForm = ({onSubmit, isEditing, ...props}) => {
                 <select
                   name="category"
                   id="category"
-                  value={productData.category? productData.category : null}
+                  value={product.category? product.category : null}
                   className="form-control"
                   onChange={changeHandler}
                 >
@@ -123,7 +135,7 @@ const ProductForm = ({onSubmit, isEditing, ...props}) => {
                   type="number"
                   name="quantity"
                   id="quantity"
-                  value={productData.quantity? productData.quantity : null}
+                  value={product.quantity? product.quantity : null}
                   className="form-control"
                   onChange={changeHandler}
                 />
@@ -141,7 +153,7 @@ const ProductForm = ({onSubmit, isEditing, ...props}) => {
                   type="number"
                   name="price"
                   id="price"
-                  value={productData.price? productData.price : null}
+                  value={product.price? product.price : null}
                   pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$"
                   className="form-control"
                   onChange={changeHandler}

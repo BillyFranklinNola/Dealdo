@@ -1,30 +1,30 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import axios from "axios";
 import cartIcon from "../images/cartIcon.png";
 import profileIcon from "../images/profileIcon.png";
 import plusIcon from "../images/plusIcon.png";
-import "../styles/NavbarTop.css";
 import ShoppingCart from "../views/ShoppingCart";
-import axios from "axios";
 import UserProducts from "../views/UserProducts";
 import CreateProduct from "../views/CreateProduct";
-import { toast } from "react-toastify";
+import "../styles/NavbarTop.css";
 
-export default function NavbarTop() {
+const NavbarTop = () => {
   const [cartOpen, setCartOpen] = useState(false);
   const [createProductOpen, setCreateProductOpen] = useState(false);
   const [userProductsOpen, setUserProductsOpen] = useState(false);
   const [searchCriteria, setSearchCriteria] = useState({ criteria: "" });
   const [searchResults, setSearchResults] = useState([]);
   const navigate = useNavigate();
-  console.log(searchCriteria);
-
   const openCart = () => setCartOpen(true);
   const closeCart = () => setCartOpen(false);
   const openCreateProduct = () => setCreateProductOpen(true);
   const closeCreateProduct = () => setCreateProductOpen(false);
   const openUserProducts = () => setUserProductsOpen(true);
   const closeUserProducts = () => setUserProductsOpen(false);
+  console.log(searchCriteria);
+
 
   const searchProducts = async (e) => {
     e.preventDefault();
@@ -124,3 +124,5 @@ export default function NavbarTop() {
     </div>
   );
 }
+
+export default NavbarTop;

@@ -8,8 +8,9 @@ import ReviewForm from "./ReviewForm";
 import { Rating } from "react-simple-star-rating";
 import ProductInfo from "./ProductInfo";
 import EditProduct from "../views/EditProduct";
+import {useNavigate} from "react-router-dom";
 
-export default function ProductCard(props) {
+const ProductCard = (props) => {
   const [productUser, setProductUser] = useState({});
   const [cartOpen, setCartOpen] = useState(false);
   const [reviewOpen, setReviewOpen] = useState(false);
@@ -24,6 +25,7 @@ export default function ProductCard(props) {
   const closeProduct = () => setProductOpen(false);
   const openEditProduct = () => setEditProductOpen(true);
   const closeEditProduct = () => setEditProductOpen(false);
+  const navigate = useNavigate();
   const loggedInUser = useSelector((state) => state.auth.user);
   const token = loggedInUser.token;
   const user_id = loggedInUser.data.user_id;
@@ -103,6 +105,7 @@ export default function ProductCard(props) {
     } catch (error) {
       console.log("Error deleting product", error)
     }
+    navigate("/products");
   }
 
   return (
@@ -155,3 +158,5 @@ export default function ProductCard(props) {
     </div>
   );
 }
+
+export default ProductCard;

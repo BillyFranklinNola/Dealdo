@@ -10,7 +10,7 @@ import "../styles/ProductInfo.css";
 import "react-responsive-modal/styles.css";
 import ProductReviews from "../views/ProductReviews";
 
-export default function ProductInfo({ productOpen, closeProduct, product }) {
+const ProductInfo = ({ productOpen, closeProduct, product }) => {
   const [productUser, setProductUser] = useState({});
   const [cartOpen, setCartOpen] = useState(false);
   const [reviewOpen, setReviewOpen] = useState(false);
@@ -136,21 +136,17 @@ export default function ProductInfo({ productOpen, closeProduct, product }) {
         <p className="soldby">SOLD BY:</p>
         <p className="user">{productUser.first_name}</p>
       </div>
-      {cartOpen && <ShoppingCart cartOpen={cartOpen} closeCart={closeCart} />}
+      {cartOpen && (
+      <ShoppingCart cartOpen={cartOpen} closeCart={closeCart} />
+      )}
       {reviewOpen && (
-        <ReviewForm
-          reviewOpen={reviewOpen}
-          closeReview={closeReview}
-          product={product}
-        />
+        <ReviewForm reviewOpen={reviewOpen} closeReview={closeReview} product={product} />
       )}
       {productReviewsOpen && (
-        <ProductReviews
-          productReviewsOpen={productReviewsOpen}
-          closeProductReviews={closeProductReviews}
-          product={thisProduct}
-        />
+        <ProductReviews productReviewsOpen={productReviewsOpen} closeProductReviews={closeProductReviews} product={thisProduct} />
       )}
     </Modal>
   );
 }
+
+export default ProductInfo;

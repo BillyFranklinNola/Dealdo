@@ -1,16 +1,15 @@
 import React from "react";
-import RegisterForm from "../components/UserForm";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { register } from "../slices/authSlice";
+import UserForm from "../components/UserForm";
 
 const RegisterScreen = () => {
+  const { isLoading, isSuccess } = useSelector((state) => state.auth);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
-  const { isLoading, isSuccess } = useSelector((state) => state.auth);
-
+  
   const registerUser = async (userData) => {
     const response = await dispatch(register(userData));
     if (isSuccess) {
@@ -32,7 +31,7 @@ const RegisterScreen = () => {
       <div className="col-lg-6 mx-auto">
         <h3 className="subNav my-4 mx-auto">New User:</h3>
         <div className="mt-3">
-          <RegisterForm
+          <UserForm
             initialFirstName=""
             initialLastName=""
             initialEmail=""

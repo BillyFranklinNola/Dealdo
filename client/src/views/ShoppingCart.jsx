@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import axios from "axios";
 import Modal from "react-responsive-modal";
+import ProductCard from "../components/ProductCard";
 import "../styles/ShoppingCart.css";
 import "react-responsive-modal/styles.css";
-import axios from "axios";
-import ProductCard from "../components/ProductCard";
-import { useSelector } from "react-redux";
-import {toast} from "react-toastify"
 
-function ShoppingCart({ cartOpen, closeCart }) {
+const ShoppingCart = ({ cartOpen, closeCart }) => {
   const [activeProducts, setActiveProducts] = useState([]);
   const [paidProducts, setPaidProducts] = useState([]);
+  const [quantity_to_purchase, setQuantityToPurchase] = useState(1);
   const [cartID, setCartID] = useState = ('')
   const loggedInUser = useSelector((state) => state.auth.user);
   const user_id = loggedInUser.data.user_id;
   const token = loggedInUser.token;
-  const [quantity_to_purchase, setQuantityToPurchase] = useState(1);
   console.log("active products:", activeProducts);
   console.log("paid products:", paidProducts);
   console.log("cart id:", cartID);
