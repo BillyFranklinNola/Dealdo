@@ -16,6 +16,7 @@ const ProductCard = (props) => {
   const [reviewOpen, setReviewOpen] = useState(false);
   const [productOpen, setProductOpen] = useState(false);
   const [editProductOpen, setEditProductOpen] = useState(false);
+  const [cartItems, setCartItems] = useState([]);
   const { product } = props;
   const openCart = () => setCartOpen(true);
   const closeCart = () => setCartOpen(false);
@@ -32,7 +33,7 @@ const ProductCard = (props) => {
   const product_id = product.product_id;
 
   useEffect(() => {
-    async function fetchData() {
+    async function getProductData() {
       try {
         const response = await fetch(
           `http://localhost:5000/api/users/${product.user_id}`
@@ -43,7 +44,7 @@ const ProductCard = (props) => {
         console.error("Error fetching user:", error);
       }
     }
-    fetchData();
+    getProductData();
   }, [product.user_id]);
 
   const productRating = () => {
@@ -63,15 +64,38 @@ const ProductCard = (props) => {
     return count > 0 ? rating / count : 0;
   };
 
-  const addToCart = async () => {
-    const data = {
-      product_id: product_id,
-      user_id: user_id,
-      quantity_to_purchase: 1,
-    };
-  
+  const itemsInCart = async () => {
     try {
-      const response = await axios.put(
+      const response = await axios.get(
+        `http://localhost:5000/api/carts/view/active`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setCartItems(response.data.data.products_in_cart);
+      console.log(response.data.data.products_in_cart);
+    } catch (error) {
+      console.error("Error getting cart items:", error);
+    }
+  };
+
+const addToCart = async () => {
+  const data = {
+    product_id: product_id,
+    user_id: user_id,
+    quantity_to_purchase: 1,
+  };
+
+  try {
+    await itemsInCart();
+    const productInCart = cartItems.some((item) => item.product_id === product_id);
+
+    if (productInCart) {
+      toast.error("Product already in cart");
+    } else {
+      const res = await axios.put(
         "http://localhost:5000/api/carts/add_product",
         data,
         {
@@ -80,20 +104,18 @@ const ProductCard = (props) => {
           },
         }
       );
-  
-      if (response.status === 200) {
-        toast.success("Product added to cart!");
-        openCart();
-      } else {
-        toast.error("Not enough inventory, please choose a different product.");
-      }
-    } catch (error) {
-      console.error("Error adding product to cart:", error);
-      toast.error("Not enough inventory, please choose a different.");
-    }
-  };
-  
 
+      if (res.status === 201) {
+        setCartOpen(true);
+        toast.success("Product added to cart!");
+      }
+    }
+  } catch (error) {
+    console.error("Error adding product to cart:", error);
+    toast.error("Product already in cart");
+  }
+};
+  
   const deleteProduct = () => {
     try {
       axios.delete(`http://localhost:5000/api/products/delete/${product.product_id}`, {

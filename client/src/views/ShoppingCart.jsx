@@ -11,7 +11,7 @@ const ShoppingCart = ({ cartOpen, closeCart }) => {
   const [activeProducts, setActiveProducts] = useState([]);
   const [paidProducts, setPaidProducts] = useState([]);
   const [quantity_to_purchase, setQuantityToPurchase] = useState(1);
-  const [cartID, setCartID] = useState = ('')
+  const [cartID, setCartID] = useState('')
   const loggedInUser = useSelector((state) => state.auth.user);
   const user_id = loggedInUser.data.user_id;
   const token = loggedInUser.token;

@@ -116,7 +116,7 @@ const NavbarTop = () => {
         <UserProducts isOpen={userProductsOpen} onClose={closeUserProducts} />
       )}
       {cartOpen && ( 
-        <ShoppingCart isOpen={cartOpen} onClose={closeCart} />
+        <ShoppingCart cartOpen={cartOpen} closeCart={closeCart} />
       )}
       {createProductOpen && (
         <CreateProduct isOpen={createProductOpen} onClose={closeCreateProduct} />

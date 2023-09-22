@@ -5,8 +5,8 @@ import { toast } from "react-toastify";
 import { login } from "../slices/authSlice";
 
 const LoginForm = (props) => {
-  const [loginInfo, setLoginInfo] = useState({ email: loginEmail, password: loginPassword });
   const { loginEmail, loginPassword } = props;
+  const [loginInfo, setLoginInfo] = useState({ email: loginEmail, password: loginPassword });
   const { isLoading } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
