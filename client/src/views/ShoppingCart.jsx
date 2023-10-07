@@ -10,14 +10,14 @@ import "react-responsive-modal/styles.css";
 const ShoppingCart = ({ cartOpen, closeCart }) => {
   const [activeProducts, setActiveProducts] = useState([]);
   const [paidProducts, setPaidProducts] = useState([]);
-  const [quantity_to_purchase, setQuantityToPurchase] = useState(1);
-  const [cartID, setCartID] = useState('')
+  const [cartID, setCartID] = useState("");
   const loggedInUser = useSelector((state) => state.auth.user);
   const user_id = loggedInUser.data.user_id;
   const token = loggedInUser.token;
   console.log("active products:", activeProducts);
   console.log("paid products:", paidProducts);
   console.log("cart id:", cartID);
+  console.log(token);
 
   useEffect(() => {
     async function getActiveProducts() {
@@ -32,7 +32,7 @@ const ShoppingCart = ({ cartOpen, closeCart }) => {
           .then((response) => {
             console.log(response.data.data);
             setActiveProducts(response.data.data.products_in_cart);
-            setCartID(response.data.data.cart_id)
+            setCartID(response.data.data.cart_id);
           });
       } catch (error) {
         console.error("Error fetching products:", error);
@@ -84,28 +84,33 @@ const ShoppingCart = ({ cartOpen, closeCart }) => {
     }
   };
 
-const changeHandler = (e, product) => {
-  setQuantityToPurchase(e.target.value);
-  const data = {
-    product_id: product.id,
-    cart_id: cartID,
-    quantity_to_purchase: quantity_to_purchase,
-  };
-  
-  if (data.quantity_to_purchase > product.quantity) {
-    toast.error('Not enough inventory')
-  } else {
+  const changeHandler = (e, product) => {
+    const newQuantity = e.target.value;
+    console.log("new quantity:", newQuantity);
+    const data = {
+      product_id: product.product_id,
+      cart_id: cartID.toString(),
+      quantity_to_purchase: newQuantity,
+    };
     try {
       axios.put("http://localhost:5000/api/carts/edit", data, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
+
+      const updatedProducts = activeProducts.map((p) => {
+        if (p.product_id === product.product_id) {
+          return { ...p, quantity_in_cart: newQuantity };
+        }
+        return p;
+      });
+      setActiveProducts(updatedProducts);
     } catch (error) {
       console.log(error);
     }
-  }
-}
+  };
+  
 
   return (
     <Modal
@@ -120,17 +125,22 @@ const changeHandler = (e, product) => {
       }}
       animationDuration={800}
     >
+      <h1 className="text-center">My Cart</h1>
       <div className="modalBody d-flex">
         {activeProducts.map((product) => (
-          <div key={product.id}>
+          <div key={product.product_id} className="productContainer">
             <ProductCard product={product} />
-            <input
-              type="number"
-              id="quantity"
-              name="quantity"
-              value={quantity_to_purchase}
-              onChange={(e) => changeHandler(e, product)}
-            />
+            <div>
+              <label htmlFor="quantity" className="me-2">Qty:</label>
+              <input
+                type="number"
+                id="quantity"
+                name="quantity"
+                style={{ width: "35px" }}
+                value={product.quantity_in_cart}
+                onChange={(e) => changeHandler(e, product)}
+              />
+            </div>
           </div>
         ))}
       </div>
@@ -147,6 +157,6 @@ const changeHandler = (e, product) => {
       </div>
     </Modal>
   );
-}
+};
 
 export default ShoppingCart;

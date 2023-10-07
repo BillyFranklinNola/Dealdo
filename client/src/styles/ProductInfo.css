@@ -1,5 +1,5 @@
 .productModalBody {
-  height: 800px;
+  height: 500px;
   width: 300px;
 }
 
@@ -14,12 +14,11 @@
   margin-right: 10px;
 }
 
-.image {
-  max-height: 30%;
+.productImage {
+  height: 30%;
   width: 90%;
   border-radius: 10px;
-  margin-left: 10px;
-  margin-right: 10px;
+  margin: 10px;
   object-fit: contain;
 }
 
@@ -45,12 +44,14 @@
   flex-direction: row;
   justify-content: space-between;
   margin-top: 10px;
+  margin-left: 3px;
+  margin-bottom: 15px;
 }
 
 .soldby {
   font-size: 15px;
   font-weight: bold;
-  margin-top: 5px;
+  margin-top: 15px;
 }
 
 .user {

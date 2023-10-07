@@ -52,6 +52,7 @@ const EditProduct = ({ editProductOpen, closeEditProduct, product }) => {
       }}
       animationDuration={800}
     >
+      <h1 className="text-center">Edit Product</h1>
       <ProductForm
         onSubmit={editProduct}
         isEditing={true}

@@ -14,7 +14,7 @@ const ProductForm = ({ onSubmit, onImageChange, isEditing, ...props }) => {
     initialCategory,
     initialQuantity,
     initialPrice,
-    initialProductID
+    initialProductID,
   } = props;
 
   const [product, setProduct] = useState({
@@ -56,111 +56,119 @@ const ProductForm = ({ onSubmit, onImageChange, isEditing, ...props }) => {
   };
 
   return (
-      <div className="container-fluid">
-        <div className="panelBackground text-secondary mx-auto p-3 border border-2 border-dark rounded">
-          <form className="mx-auto" onSubmit={onSubmitHandler}>
-            <div className="row form-group align-items-center mt-4">
-              <label
-                htmlFor="name"
-                className="col-4 col-lg-3 col-form-label me-2"
+    <div className="container-fluid p-4">
+      <div className="panelBackground text-secondary mx-auto p-3 border border-2 border-dark rounded">
+        <form className="mx-auto" onSubmit={onSubmitHandler}>
+          <div className="row form-group align-items-center mt-4">
+            <label
+              htmlFor="name"
+              className="col-4 col-lg-3 col-form-label me-2"
+            >
+              Title:
+            </label>
+            <div className="col-7 col-lg-8">
+              <input
+                type="text"
+                name="name"
+                id="name"
+                value={product.name ? product.name : null}
+                className="form-control"
+                onChange={changeHandler}
+              />
+            </div>
+          </div>
+          <div className="row form-group align-items-center mt-4">
+            <label
+              htmlFor="description"
+              className="col-4 col-lg-3 col-form-label me-2"
+            >
+              Description:
+            </label>
+            <div className="col-7 col-lg-8">
+              <input
+                type="text"
+                name="description"
+                id="description"
+                value={product.description ? product.description : null}
+                className="form-control"
+                onChange={changeHandler}
+              />
+            </div>
+          </div>
+          <div className="row form-group align-items-center mt-4">
+            <label
+              htmlFor="category"
+              className="col-3 col-lg-2 col-form-label me-2"
+            >
+              Category:
+            </label>
+            <div className="col-8 col-lg-9">
+              <select
+                name="category"
+                id="category"
+                value={product.category ? product.category : null}
+                className="form-control"
+                onChange={changeHandler}
               >
-                Title:
-              </label>
-              <div className="col-7 col-lg-8">
+                <option value="" disabled selected>
+                  Select a category
+                </option>
+                <option value="home_and_garden">Home and Garden</option>
+                <option value="electronics">Electronics</option>
+                <option value="health_and_wellness">Health and Wellness</option>
+                <option value="automotive">Automotive</option>
+                <option value="pet_care">Pet Care</option>
+                <option value="clothing_and_apparel">
+                  Clothing and Apparel
+                </option>
+                <option value="musical_equipment">Musical Equipment</option>
+                <option value="arts_and_crafts">Arts and Crafts</option>
+                <option value="toys_and_games">Toys and Games</option>
+              </select>
+            </div>
+          </div>
+          <div className="row form-group align-items-center mt-4">
+            <label
+              htmlFor="quantity"
+              className="col-4 col-lg-3 col-form-label me-2"
+            >
+              Quantity:
+            </label>
+            <div className="col-7 col-lg-8">
+              <input
+                type="number"
+                name="quantity"
+                id="quantity"
+                value={product.quantity ? product.quantity : null}
+                className="form-control"
+                onChange={changeHandler}
+              />
+            </div>
+          </div>
+          <div className="row form-group align-items-center mt-4">
+            <label
+              htmlFor="price"
+              className="col-4 col-lg-3 col-form-label me-2"
+            >
+              Price:
+            </label>
+            <div className="col-7 col-lg-8">
+              <div className="input-group">
+                <span className="input-group-text">$</span>
                 <input
                   type="text"
-                  name="name"
-                  id="name"
-                  value={product.name? product.name : null}
-                  className="form-control"
-                  onChange={changeHandler}
-                />
-              </div>
-            </div>
-            <div className="row form-group align-items-center mt-4">
-              <label
-                htmlFor="description"
-                className="col-4 col-lg-3 col-form-label me-2"
-              >
-                Description:
-              </label>
-              <div className="col-7 col-lg-8">
-                <input
-                  type="text"
-                  name="description"
-                  id="description"
-                  value={product.description ? product.description : null}
-                  className="form-control"
-                  onChange={changeHandler}
-                />
-              </div>
-            </div>
-            <div className="row form-group align-items-center mt-4">
-              <label
-                htmlFor="category"
-                className="col-3 col-lg-2 col-form-label me-2"
-              >
-                Category:
-              </label>
-              <div className="col-8 col-lg-9">
-                <select
-                  name="category"
-                  id="category"
-                  value={product.category? product.category : null}
-                  className="form-control"
-                  onChange={changeHandler}
-                >
-                  <option value="" disabled selected>Select a category</option>
-                  <option value="home_and_garden">Home and Garden</option>
-                  <option value="electronics">Electronics</option>
-                  <option value="health_and_wellness">Health and Wellness</option>
-                  <option value="automotive">Automotive</option>
-                  <option value="pet_care">Pet Care</option>
-                  <option value="clothing_and_apparel">Clothing and Apparel</option>
-                  <option value="musical_equipment">Musical Equipment</option>
-                  <option value="arts_and_crafts">Arts and Crafts</option>
-                  <option value="toys_and_games">Toys and Games</option>
-                </select>
-              </div>
-            </div>
-            <div className="row form-group align-items-center mt-4">
-              <label
-                htmlFor="quantity"
-                className="col-4 col-lg-3 col-form-label me-2"
-              >
-                Quantity:
-              </label>
-              <div className="col-7 col-lg-8">
-                <input
-                  type="number"
-                  name="quantity"
-                  id="quantity"
-                  value={product.quantity? product.quantity : null}
-                  className="form-control"
-                  onChange={changeHandler}
-                />
-              </div>
-            </div>
-            <div className="row form-group align-items-center mt-4">
-              <label
-                htmlFor="price"
-                className="col-4 col-lg-3 col-form-label me-2"
-              >
-                Price:
-              </label>
-              <div className="col-7 col-lg-8">
-                <input
-                  type="number"
                   name="price"
+                  pattern="^\d+(\.\d{2})?$"
                   id="price"
-                  value={product.price? product.price : null}
-                  pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$"
+                  value={product.price ? product.price : ""}
                   className="form-control"
                   onChange={changeHandler}
+                  placeholder="0.00"
                 />
               </div>
             </div>
-            { !isEditing ?
+          </div>
+          {!isEditing ? (
             <div className="row form-group align-items-center mt-4">
               <label
                 htmlFor="image"
@@ -179,14 +187,13 @@ const ProductForm = ({ onSubmit, onImageChange, isEditing, ...props }) => {
                 />
               </div>
             </div>
-            : null
-            }
-            <button input type="submit" className="btn btn-warning mt-4 mb-3">
-              Submit
-            </button>
-          </form>
-        </div>
+          ) : null}
+          <button input type="submit" className="btn btn-warning mt-4 mb-3">
+            Submit
+          </button>
+        </form>
       </div>
+    </div>
   );
 };
 

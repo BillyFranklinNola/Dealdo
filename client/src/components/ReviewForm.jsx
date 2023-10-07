@@ -58,12 +58,12 @@ const ReviewForm = ({ reviewOpen, closeReview, product }) => {
         }}
         animationDuration={800}
       >
-        <div>
-          <h1>Leave a Review</h1>
+        <h1 className="text-center mt-2">Leave a Review</h1>
+        <div className="text-secondary p-3 border border-2 border-dark rounded m-4">
           <div className="d-flex">
             <img
               src={`http://localhost:5000/api/img/products/${thisProduct.img_filename}`}
-              className="image"
+              className="reviewImg"
               alt="product"
             />
             <h3>{thisProduct.name}</h3>
@@ -79,7 +79,7 @@ const ReviewForm = ({ reviewOpen, closeReview, product }) => {
                 onChange={changeHandler}
               />
             </div>
-            <div>
+            <div className="my-2">
               <StarRating handleRating={handleRating}/>
             </div>
             <button type="submit" className="btn btn-primary" onClick={submitReview}>

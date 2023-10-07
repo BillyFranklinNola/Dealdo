@@ -157,6 +157,9 @@ class Product:
         query = """DELETE FROM reviews
                     WHERE product_id = %(id)s;"""
         connectToMySQL(cls.db).query_db(query,{'id':product_id})
+        query = """DELETE FROM products_in_carts
+                    WHERE product_id = %(id)s;"""
+        connectToMySQL(cls.db).query_db(query,{'id':product_id})
         query = """DELETE FROM products
                     WHERE id = %(id)s;"""
         return connectToMySQL(cls.db).query_db(query,{'id':product_id})

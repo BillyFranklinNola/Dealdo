@@ -36,6 +36,7 @@ def view_paid_carts_api():
 @token_required()
 def edit_cart_api():
     data = request.get_json()
+    print(data)
     data['user_id'] = session['user_id']
     session.clear()
     if Cart.edit_product_quantity_in_cart(data):

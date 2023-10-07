@@ -3,6 +3,14 @@
   height: 800px;
 }
 
+.productContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+
 @keyframes enterOverlay {
     0% {
       transform: scale(0);

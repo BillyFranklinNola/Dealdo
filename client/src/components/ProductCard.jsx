@@ -8,7 +8,7 @@ import ReviewForm from "./ReviewForm";
 import { Rating } from "react-simple-star-rating";
 import ProductInfo from "./ProductInfo";
 import EditProduct from "../views/EditProduct";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const ProductCard = (props) => {
   const [productUser, setProductUser] = useState({});
@@ -50,7 +50,7 @@ const ProductCard = (props) => {
   const productRating = () => {
     let rating = 0;
     let count = 0;
-  
+
     try {
       product.reviews.forEach((review) => {
         rating += review.rating;
@@ -81,59 +81,69 @@ const ProductCard = (props) => {
     }
   };
 
-const addToCart = async () => {
-  const data = {
-    product_id: product_id,
-    user_id: user_id,
-    quantity_to_purchase: 1,
+  const addToCart = async () => {
+    const data = {
+      product_id: product_id,
+      user_id: user_id,
+      quantity_to_purchase: 1,
+    };
+
+    try {
+      await itemsInCart();
+      console.log(product_id);
+      console.log(cartItems);
+
+      const productInCart = cartItems.some(
+        (item) => item.product_id === product_id
+      );
+
+      console.log(productInCart);
+
+      if (productInCart) {
+        toast.error("Product already in cart");
+      } else {
+        const res = await axios.put(
+          "http://localhost:5000/api/carts/add_product",
+          data,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        if (res.status === 201) {
+          openCart();
+          toast.success("Product added to cart!");
+        }
+      }
+    } catch (error) {
+      console.error("Error adding product to cart:", error);
+      toast.error("Product already in cart");
+    }
   };
 
-  try {
-    await itemsInCart();
-    const productInCart = cartItems.some((item) => item.product_id === product_id);
-
-    if (productInCart) {
-      toast.error("Product already in cart");
-    } else {
-      const res = await axios.put(
-        "http://localhost:5000/api/carts/add_product",
-        data,
+  const deleteProduct = () => {
+    try {
+      axios.delete(
+        `http://localhost:5000/api/products/delete/${product.product_id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
-
-      if (res.status === 201) {
-        setCartOpen(true);
-        toast.success("Product added to cart!");
-      }
-    }
-  } catch (error) {
-    console.error("Error adding product to cart:", error);
-    toast.error("Product already in cart");
-  }
-};
-  
-  const deleteProduct = () => {
-    try {
-      axios.delete(`http://localhost:5000/api/products/delete/${product.product_id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
       toast.success("Product deleted!");
+      window.location.reload();
     } catch (error) {
-      console.log("Error deleting product", error)
+      console.log("Error deleting product", error);
     }
     navigate("/products");
-  }
+  };
 
   return (
     <div className="card m-3">
       <h2 className="ms-2">{product.name}</h2>
-      
+
       <p className="description">{product.description}</p>
       <img
         src={`http://localhost:5000/api/img/products/${product.img_filename}`}
@@ -147,38 +157,78 @@ const addToCart = async () => {
         </button>
       </div>
       <div className="reviewline">
-        <Rating
-          initialValue={productRating()}
-          readonly={true}
-          size={20}
-        />
-        <a href="#" className="primary" onClick={(e) => {e.preventDefault(); openReview()}}>
+        <Rating initialValue={productRating()} readonly={true} size={20} />
+        <a
+          href="#"
+          className="primary"
+          onClick={(e) => {
+            e.preventDefault();
+            openReview();
+          }}
+        >
           Leave Review
         </a>
       </div>
       <p className="soldby">SOLD BY:</p>
       <p className="user">{productUser.first_name}</p>
-      <a href="#" className="primary mx-auto" onClick={(e) => {e.preventDefault(); openProduct()}}>
-          More Details
-        </a>
-        {
-          product.user_id === loggedInUser.data.user_id ?
-        <div>
-        <a href="#" className="primary mx-auto" onClick={(e) => {e.preventDefault(); openEditProduct()}}>
-          Edit
-        </a>
-        <a href="#" className="primary mx-auto" onClick={(e) => {e.preventDefault(); deleteProduct()}} >
-          Delete
-        </a>
+      <a
+        href="#"
+        className="primary mx-auto"
+        onClick={(e) => {
+          e.preventDefault();
+          openProduct();
+        }}
+      >
+        More Details
+      </a>
+      {product.user_id === loggedInUser.data.user_id ? (
+        <div className="d-flex justify-content-between mt-3">
+          <a
+            href="#"
+            className="primary mx-auto"
+            onClick={(e) => {
+              e.preventDefault();
+              openEditProduct();
+            }}
+          >
+            Edit
+          </a>
+          <a
+            href="#"
+            className="primary mx-auto"
+            onClick={(e) => {
+              e.preventDefault();
+              deleteProduct();
+            }}
+          >
+            Delete
+          </a>
         </div>
-        : null
-        }
+      ) : null}
       {cartOpen && <ShoppingCart cartOpen={cartOpen} closeCart={closeCart} />}
-      {reviewOpen && <ReviewForm reviewOpen={reviewOpen} closeReview={closeReview} product={product} />}
-      {productOpen && <ProductInfo productOpen={productOpen} closeProduct={closeProduct} product={product} />}
-      {editProductOpen && <EditProduct editProductOpen={editProductOpen} closeEditProduct={closeEditProduct} product={product} />}
+      {reviewOpen && (
+        <ReviewForm
+          reviewOpen={reviewOpen}
+          closeReview={closeReview}
+          product={product}
+        />
+      )}
+      {productOpen && (
+        <ProductInfo
+          productOpen={productOpen}
+          closeProduct={closeProduct}
+          product={product}
+        />
+      )}
+      {editProductOpen && (
+        <EditProduct
+          editProductOpen={editProductOpen}
+          closeEditProduct={closeEditProduct}
+          product={product}
+        />
+      )}
     </div>
   );
-}
+};
 
 export default ProductCard;

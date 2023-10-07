@@ -98,7 +98,7 @@ const ProductInfo = ({ productOpen, closeProduct, product }) => {
         <p className="fullDescription">{thisProduct.description}</p>
         <img
           src={`http://localhost:5000/api/img/products/${thisProduct.img_filename}`}
-          className="image"
+          className="productImage"
           alt="product"
         />
         <div className="priceline">
@@ -125,7 +125,7 @@ const ProductInfo = ({ productOpen, closeProduct, product }) => {
         </div>
         <a
           href="#"
-          className="primary"
+          className="primary ms-2"
           onClick={(e) => {
             e.preventDefault();
             openProductReviews();

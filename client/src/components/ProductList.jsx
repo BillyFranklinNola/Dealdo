@@ -25,7 +25,7 @@ function ProductList() {
     <div>
       <div className="d-flex">
         {products.map((product) => (
-          <ProductCard key={product.id} product={product}/>
+          <ProductCard key={product.product_id} product={product}/>
         ))}
       </div>
     </div>

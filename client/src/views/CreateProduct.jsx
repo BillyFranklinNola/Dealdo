@@ -13,11 +13,9 @@ const CreateProduct = ({ isOpen, onClose }) => {
   const token = loggedInUser.token;
 
   const createProduct = async (product) => {
-    const { userID, name, description, category, quantity, price} = product;
-    const productData = {userID, name, description, category, quantity, price};
-    console.log(token);
-    console.log(productData);
-    console.log(product.image);
+    const { userID, name, description, category, quantity, price } = product;
+    const productData = { userID, name, description, category, quantity, price };
+  
     try {
       const newProduct = await axios.post(
         "http://localhost:5000/api/products/create",
@@ -29,20 +27,26 @@ const CreateProduct = ({ isOpen, onClose }) => {
         }
       );
       console.log(newProduct);
-      setProductID(newProduct.data.data.product_id);
+      const productID = newProduct.data.data.product_id;
       toast.success("Product added successfully!");
+  
+      // Now, call the image upload function
+      await uploadImage(productID, product.image);
+  
       onClose();
       window.location.reload();
     } catch (error) {
       console.log(error);
       toast.error("Error adding product!");
     }
+  };
+  
+  const uploadImage = async (productID, image) => {
     try {
       const formData = new FormData();
-      console.log(product.image);
-      console.log(productID);
-      formData.append("file", product.image);
+      formData.append("file", image);
       formData.append("product_id", productID);
+  
       await axios.post(
         'http://localhost:5000/api/img/products/upload',
         formData,
@@ -53,12 +57,14 @@ const CreateProduct = ({ isOpen, onClose }) => {
           },
         }
       );
-      toast.success("Image added successfully!")
+  
+      toast.success("Image added successfully!");
     } catch (error) {
       console.log(error);
       toast.error("Error adding image!");
     }
   };
+  
 
   return (
     <Modal
@@ -73,6 +79,7 @@ const CreateProduct = ({ isOpen, onClose }) => {
       }}
       animationDuration={800}
     >
+      <h1 className="text-center">Create Product</h1>
       <ProductForm
         onSubmit={createProduct}
         isEditing={false}

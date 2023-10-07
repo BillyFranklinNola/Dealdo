@@ -44,7 +44,7 @@ const LoginForm = (props) => {
 
   return (
     <div className="container">
-      <div className="panelBackground text-white mx-auto p-3 border border-2 border-dark rounded">
+      <div className="mx-auto p-3 border border-2 border-dark rounded">
         <form className="mx-auto" onSubmit={onSubmitHandler}>
           <div className="row form-group align-items-center mt-4">
             <label
@@ -80,7 +80,7 @@ const LoginForm = (props) => {
               />
             </div>
           </div>
-          <button type="submit" className="btn btn-warning mt-4 mb-4 mx-auto">
+          <button type="submit" className="btn btn-warning mt-4 mb-4">
             Submit
           </button>
         </form>

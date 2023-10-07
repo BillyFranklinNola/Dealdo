@@ -7,7 +7,7 @@ img_bp = Blueprint('img_api', __name__, url_prefix='/api/img')
 @img_bp.route('/products/upload', methods=['POST'])
 @token_required()
 def upload_product_image():
-    print(request.files)
+    print("file: ", request.files)
     print(request.form)
     file = request.files['file']
     product_id = request.form.get('product_id')
