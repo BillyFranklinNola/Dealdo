@@ -140,6 +140,7 @@ class Cart:
                                             quantity_in_cart = %(quantity_in_cart)s
                                             WHERE cart_id = %(cart_id)s AND product_id = %(product_id)s;"""
             connectToMySQL(cls.db).query_db(update_item_in_cart_quantity, data)
+            return True
         elif data['quantity_in_cart'] == 0:
             cls.remove_item_from_cart(data)
             return True
