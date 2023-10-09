@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Modal from "react-responsive-modal";
 import StarRating from "./StarRating";
@@ -13,17 +14,23 @@ const ReviewForm = ({ reviewOpen, closeReview, product }) => {
   const loggedInUser = useSelector((state) => state.auth.user);
   const token = loggedInUser.token;
   const user_id = loggedInUser.data.user_id;
+  const navigate = useNavigate();
   console.log(reviewData);
 
   const changeHandler = (e) => {
     setReviewData({ ...reviewData, [e.target.name]: e.target.value });
   }
 
-  const handleRating = (rate) => {
-    setReviewData({ ...reviewData, rating: rate });
+  const handleRating = (r) => {
+    setReviewData({ ...reviewData, rating: r });
   }
 
   const submitReview = () => {
+    console.log(user_id)
+    console.log(thisProduct.product_ID)
+    console.log(reviewData.content)
+    console.log(reviewData.rating)
+
     const data = {
       user_id: user_id,
       product_id: thisProduct.product_id,
@@ -38,7 +45,7 @@ const ReviewForm = ({ reviewOpen, closeReview, product }) => {
       });
       toast.success("Review submitted!");
       closeReview();
-      window.location.reload();
+      navigate("/products?refresh=true")
     } catch (error) {
       console.error("Error submitting review:", error);
     }

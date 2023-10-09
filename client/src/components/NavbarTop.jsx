@@ -67,6 +67,20 @@ const NavbarTop = () => {
       navigate("/products");
     }
   };
+
+  const logoutUser = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch(`http://localhost:5000/api/auth/logout`);
+      const data = await response.json();
+      console.log(data);
+      toast.success("Logged out successfully");
+      navigate("/");
+    } catch (error) {
+      console.error("Error logging out:", error);
+      toast.error("An error occurred while logging out");
+    }
+  }
   
   
 
@@ -112,6 +126,7 @@ const NavbarTop = () => {
           />
         </div>
       </div>
+      <a href="/products" onClick={logoutUser}>Logout</a>
       {userProductsOpen && (
         <UserProducts isOpen={userProductsOpen} onClose={closeUserProducts} />
       )}

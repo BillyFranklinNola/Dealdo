@@ -93,32 +93,31 @@ const ProductCard = (props) => {
       console.log(product_id);
       console.log(cartItems);
 
-      const productInCart = cartItems.some(
-        (item) => item.product_id === product_id
-      );
+      // const productInCart = cartItems.some(
+      //   (item) => item.product_id === product_id
+      // );
 
-      console.log(productInCart);
+      // console.log(productInCart);
 
-      if (productInCart) {
-        toast.error("Product already in cart");
-      } else {
-        const res = await axios.put(
-          "http://localhost:5000/api/carts/add_product",
-          data,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        if (res.status === 201) {
-          openCart();
-          toast.success("Product added to cart!");
+      // if (productInCart) {
+      //   toast.error("Product already in cart");
+      // } else {
+      const res = await axios.put(
+        "http://localhost:5000/api/carts/add_product",
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
+      );
+      if (res.status === 201) {
+        openCart();
+        toast.success("Product added to cart!");
       }
     } catch (error) {
       console.error("Error adding product to cart:", error);
-      toast.error("Product already in cart");
+      toast.error("Error adding product to cart");
     }
   };
 

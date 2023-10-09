@@ -1,12 +1,7 @@
 import React, { useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import { register } from "../slices/authSlice";
 
-const UserForm = (onSubmit, ...props) => {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
+
+const UserForm = ({onSubmit, ...props}) => {
   const {
     initialFirst_name,
     initialLast_name,
@@ -26,38 +21,18 @@ const UserForm = (onSubmit, ...props) => {
     isSubmitted: false,
   });
 
-  const { isLoading, isSuccess } = useSelector((state) => state.auth);
-
   const changeHandler = (e) => {
     setuserData((prevState) => ({
       ...prevState,
       [e.target.name]: e.target.value,
     }));
   };
+  
 
   const onSubmitHandler = async (e) => {
     e.preventDefault();
     onSubmit(userData)
-    
-    const response = await dispatch(register(userData));
-    if (isSuccess) {
-      console.log(response.payload);
-      setuserData((prevState) => ({
-        ...prevState,
-        isSubmitted: true,
-      }));
-      navigate("/");
-    } else {
-      const errorResponse = response;
-      console.log(errorResponse);
-      for (const key of Object.keys(errorResponse)) {
-        toast.error(errorResponse[key].message);
-      }
-    }
   };
-  if (isLoading) {
-    return <h1>Loading...</h1>;
-  }
 
   return (
     <div className="container-fluid">

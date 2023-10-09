@@ -1,29 +1,42 @@
 import React, { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import ProductCard from "./ProductCard";
+import "../styles/ProductList.css";
 
 function ProductList() {
   const [products, setProducts] = useState([]);
-  const [refreshKey, setRefreshKey] = useState(0);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const searchParams = new URLSearchParams(location.search);
+  const refresh = searchParams.get("refresh");
 
+  const fetchData = async () => {
+    try {
+      const response = await axios.get("http://localhost:5000/api/products");
+      setProducts(response.data.data);
+      console.log("Products have been received!");
+      console.log(response.data.data);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    }
+  };
 
   useEffect(() => {
-    async function fetchData() {
-      try {
-        const response = await axios.get("http://localhost:5000/api/products");
-        setProducts(response.data.data);
-        console.log("Products have been received!");
-        console.log(response.data.data);
-      } catch (error) {
-        console.error("Error fetching products:", error);
-      }
+    if (refresh === "true") {
+      fetchData(); 
+      searchParams.delete("refresh");
+      navigate({ search: searchParams.toString() });
     }
-    fetchData();
-  }, [refreshKey]);
+  }, [location.search, refresh, navigate, searchParams]);
+
+  useEffect(() => {
+    fetchData(); 
+  }, [refresh]);
 
   return (
     <div>
-      <div className="d-flex">
+      <div className="productListContainer">
         {products.map((product) => (
           <ProductCard key={product.product_id} product={product}/>
         ))}

@@ -1,13 +1,6 @@
-.modalBody {
-  width: 800px;
-  height: 800px;
-}
-
-.productContainer {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 10px;
+.shoppingCartContainer {
+  width: 600px;
+  height: auto;
 }
 
 

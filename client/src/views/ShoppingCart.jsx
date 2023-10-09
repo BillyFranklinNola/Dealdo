@@ -6,18 +6,17 @@ import Modal from "react-responsive-modal";
 import ProductCard from "../components/ProductCard";
 import "../styles/ShoppingCart.css";
 import "react-responsive-modal/styles.css";
+import OrderHistory from "./OderHistory";
 
 const ShoppingCart = ({ cartOpen, closeCart }) => {
   const [activeProducts, setActiveProducts] = useState([]);
-  const [paidProducts, setPaidProducts] = useState([]);
   const [cartID, setCartID] = useState("");
+  const [historyOpen, setHistoryOpen] = useState(false);
+  const openHistory = () => setHistoryOpen(true);
+  const closeHistory = () => setHistoryOpen(false);
   const loggedInUser = useSelector((state) => state.auth.user);
   const user_id = loggedInUser.data.user_id;
   const token = loggedInUser.token;
-  console.log("active products:", activeProducts);
-  console.log("paid products:", paidProducts);
-  console.log("cart id:", cartID);
-  console.log(token);
 
   useEffect(() => {
     async function getActiveProducts() {
@@ -67,23 +66,6 @@ const ShoppingCart = ({ cartOpen, closeCart }) => {
     }
   };
 
-  const getPaidProducts = async () => {
-    try {
-      axios
-        .get("http://localhost:5000/api/carts/view/paid", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        .then((response) => {
-          console.log(response.data.data);
-          setPaidProducts(response.data.data.products_in_cart);
-        });
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   const changeHandler = (e, product) => {
     const newQuantity = e.target.value;
     console.log("new quantity:", newQuantity);
@@ -126,12 +108,12 @@ const ShoppingCart = ({ cartOpen, closeCart }) => {
       animationDuration={800}
     >
       <h1 className="text-center">My Cart</h1>
-      <div className="modalBody d-flex">
+      <div className="shoppingCartContainer">
         {activeProducts.map((product) => (
-          <div key={product.product_id} className="productContainer">
+          <div key={product.product_id} className="d-flex my-5">
             <ProductCard product={product} />
             <div>
-              <label htmlFor="quantity" className="me-2">Qty:</label>
+              <label htmlFor="quantity" className="mt-4">Qty:</label>
               <input
                 type="number"
                 id="quantity"
@@ -139,6 +121,7 @@ const ShoppingCart = ({ cartOpen, closeCart }) => {
                 style={{ width: "35px" }}
                 value={product.quantity_in_cart}
                 onChange={(e) => changeHandler(e, product)}
+                className="ms-2"
               />
             </div>
           </div>
@@ -148,12 +131,22 @@ const ShoppingCart = ({ cartOpen, closeCart }) => {
         <button className="btn btn-secondary" onClick={emptyCart}>
           Empty Cart
         </button>
-        <a href="#" onClick={getPaidProducts}>
+        <a href="#" 
+        onClick={(e) => {
+          e.preventDefault();
+          openHistory();
+        }}>
           View order history
         </a>
         <button className="btn btn-secondary" onClick={checkoutCart}>
           Checkout
         </button>
+        {historyOpen && (
+        <OrderHistory
+          historyOpen={historyOpen}
+          closeHistory={closeHistory}
+        />
+      )}
       </div>
     </Modal>
   );
