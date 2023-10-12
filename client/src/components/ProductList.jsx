@@ -34,6 +34,8 @@ function ProductList() {
     fetchData(); 
   }, [refresh]);
 
+  console.log(products);
+
   return (
     <div>
       <div className="productListContainer">

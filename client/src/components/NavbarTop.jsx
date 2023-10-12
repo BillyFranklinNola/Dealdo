@@ -25,25 +25,32 @@ const NavbarTop = () => {
   const closeUserProducts = () => setUserProductsOpen(false);
   console.log(searchCriteria);
 
-
   const searchProducts = async (e) => {
     e.preventDefault();
     setSearchResults([]);
     let hasError = false;
-  
+
     if (!searchCriteria.criteria) {
       toast.error("Please enter search criteria");
       return;
     }
-  
+
     const productIDs = new Set();
     try {
-      const [nameSearch, categorySearch, descriptionSearch] = await Promise.all([
-        axios.get(`http://localhost:5000/api/products/name/${searchCriteria.criteria}`),
-        axios.get(`http://localhost:5000/api/products/category/${searchCriteria.criteria}`),
-        axios.get(`http://localhost:5000/api/products/description/${searchCriteria.criteria}`)
-      ]);
-  
+      const [nameSearch, categorySearch, descriptionSearch] = await Promise.all(
+        [
+          axios.get(
+            `http://localhost:5000/api/products/name/${searchCriteria.criteria}`
+          ),
+          axios.get(
+            `http://localhost:5000/api/products/category/${searchCriteria.criteria}`
+          ),
+          axios.get(
+            `http://localhost:5000/api/products/description/${searchCriteria.criteria}`
+          ),
+        ]
+      );
+
       [nameSearch, categorySearch, descriptionSearch].forEach((search) => {
         search.data.data.forEach((product) => {
           if (!productIDs.has(product.product_id)) {
@@ -55,13 +62,13 @@ const NavbarTop = () => {
           }
         });
       });
-      navigate('/results', {state: {searchResults}})
+      navigate("/results", { state: { searchResults } });
     } catch (error) {
       console.error("Error in search:", error);
       toast.error("An error occurred while searching.");
       hasError = true;
     }
-  
+
     if (!hasError && searchResults.length === 0) {
       toast.error("No results, please refine your search");
       navigate("/products");
@@ -80,9 +87,7 @@ const NavbarTop = () => {
       console.error("Error logging out:", error);
       toast.error("An error occurred while logging out");
     }
-  }
-  
-  
+  };
 
   const changeHandler = (e) => {
     setSearchCriteria({ ...searchCriteria, [e.target.name]: e.target.value });
@@ -105,39 +110,45 @@ const NavbarTop = () => {
             Submit
           </button>
         </form>
-        <div>
-          <img
-            src={plusIcon}
-            className="icons me-3"
-            onClick={openCreateProduct}
-            alt="plus"
-          />
-          <img
-            src={cartIcon}
-            className="icons me-3"
-            onClick={openCart}
-            alt="shopping cart"
-          />
-          <img
-            src={profileIcon}
-            className="icons"
-            onClick={openUserProducts}
-            alt="profile pic"
-          />
+        <div className="icons-container">
+          <div className="icon-wrapper" onClick={openCreateProduct}>
+            <img
+              src={plusIcon}
+              className="icons"
+              alt="add product"
+            />
+            <div className="icon-tooltip">Add Product</div>
+          </div>
+          <div className="icon-wrapper" onClick={openCart}>
+            <img
+              src={cartIcon}
+              className="icons"
+              alt="shopping cart"
+            />
+            <div className="icon-tooltip">Shopping Cart</div>
+          </div>
+          <div className="icon-wrapper" onClick={openUserProducts}>
+            <img
+              src={profileIcon}
+              className="icons"
+              alt="profile pic"
+            />
+            <div className="icon-tooltip">My Products</div>
+          </div>
         </div>
       </div>
-      <a href="/products" onClick={logoutUser}>Logout</a>
       {userProductsOpen && (
         <UserProducts isOpen={userProductsOpen} onClose={closeUserProducts} />
       )}
-      {cartOpen && ( 
-        <ShoppingCart cartOpen={cartOpen} closeCart={closeCart} />
-      )}
+      {cartOpen && <ShoppingCart cartOpen={cartOpen} closeCart={closeCart} />}
       {createProductOpen && (
-        <CreateProduct isOpen={createProductOpen} onClose={closeCreateProduct} />
+        <CreateProduct
+          isOpen={createProductOpen}
+          onClose={closeCreateProduct}
+        />
       )}
     </div>
   );
-}
+};
 
 export default NavbarTop;

@@ -92,6 +92,8 @@ const ShoppingCart = ({ cartOpen, closeCart }) => {
       console.log(error);
     }
   };
+
+  console.log(activeProducts);
   
 
   return (
@@ -108,6 +110,9 @@ const ShoppingCart = ({ cartOpen, closeCart }) => {
       animationDuration={800}
     >
       <h1 className="text-center">My Cart</h1>
+      {activeProducts.length === 0 ?
+      <h3 className="text-center my-5">- There are no products in your cart -</h3>
+      : null}
       <div className="shoppingCartContainer">
         {activeProducts.map((product) => (
           <div key={product.product_id} className="d-flex my-5">

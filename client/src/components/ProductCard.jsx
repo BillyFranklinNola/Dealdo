@@ -39,6 +39,7 @@ const ProductCard = (props) => {
           `http://localhost:5000/api/users/${product.user_id}`
         );
         const data = await response.json();
+        console.log(data.data);
         setProductUser(data.data);
       } catch (error) {
         console.error("Error fetching user:", error);
@@ -50,6 +51,9 @@ const ProductCard = (props) => {
   const productRating = () => {
     let rating = 0;
     let count = 0;
+
+    console.log(product.reviews);
+    console.log(product);
 
     try {
       product.reviews.forEach((review) => {

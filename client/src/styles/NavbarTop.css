@@ -4,10 +4,6 @@
   box-shadow: 1px 1px rgba(0, 0, 0, 0.75);
 }
 
-.icons {
-  height: 35px;
-}
-
 .searchbar {
   width: 400px;
   height: 30px;
@@ -24,5 +20,39 @@
   color: white;
   font-size: small;
   font-weight: 500;
+}
 
+.icons {
+  height: 35px;
+}
+
+.icons-container {
+  display: flex;
+}
+
+.icon-wrapper {
+  position: relative;
+  margin-right: 10px;
+}
+
+.icon-tooltip {
+  visibility: hidden;
+  width: 120px;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.icon-wrapper:hover .icon-tooltip {
+  visibility: visible;
+  opacity: 1;
 }
