@@ -16,8 +16,7 @@ const initialState = {
 export const register = createAsyncThunk("auth/register", async (user) => {
   try {
     const response = await authService.register(user);
-    toast.success("Registration Successful");
-    console.log("Login Successful");
+    console.log(response);
     return response;
   } catch (error) {
     const errorResponse = error;
@@ -33,7 +32,6 @@ export const logout = createAsyncThunk("auth/logout", async () => {
 export const login = createAsyncThunk("auth/login", async (user, thunkAPI) => {
   try {
     const response = await authService.login(user);
-    toast.success("Login Successful");
     return response;
   } catch (error) {
     const errorResponse = error.response

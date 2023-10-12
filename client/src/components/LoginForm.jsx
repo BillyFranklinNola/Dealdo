@@ -1,13 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { login } from "../slices/authSlice";
+import { login, reset } from "../slices/authSlice";
 
 const LoginForm = (props) => {
   const { loginEmail, loginPassword } = props;
   const [loginInfo, setLoginInfo] = useState({ email: loginEmail, password: loginPassword });
-  const { isLoading } = useSelector((state) => state.auth);
+  const { isLoading, isSuccess, isError, errors } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -23,34 +23,36 @@ const LoginForm = (props) => {
     const { email, password } = loginInfo;
     const loginData = { email, password };
     try {
-      const userData = await dispatch(login(loginData));
-      console.log(userData);
-      navigate("/products");
-      // const isAdmin = userData.payload.user.isAdmin;
-      // console.log(isAdmin);
-      // {
-      //     isAdmin?
-      //     navigate('/AdminDashboard') :
-      //     navigate('/UserDashboard')
-      // }
+      const loginResponse = await dispatch(login(loginData));
+      console.log(loginResponse);
     } catch (error) {
       console.log(error);
       toast.error("Login failed");
     }
-    if (isLoading) {
-      return <h1>Loading...</h1>;
-    }
   };
+
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success("Login Successful");
+      navigate("/products");
+      dispatch(reset());
+    }
+    if (isError) {
+      toast.error("Invalid email or password");
+      dispatch(reset());
+    }
+  }, [dispatch, isSuccess, isError, navigate, errors]);
+
+  if (isLoading) {
+    return <h1>Loading...</h1>;
+  }
 
   return (
     <div className="container">
       <div className="mx-auto p-3 border border-2 border-dark rounded">
         <form className="mx-auto" onSubmit={onSubmitHandler}>
           <div className="row form-group align-items-center mt-4">
-            <label
-              htmlFor="email"
-              className="col-4 col-lg-3 col-form-label me-2"
-            >
+            <label htmlFor="email" className="col-4 col-lg-3 col-form-label me-2">
               Email:
             </label>
             <div className="col-7 col-lg-8">
@@ -64,10 +66,7 @@ const LoginForm = (props) => {
             </div>
           </div>
           <div className="row form-group align-items-center mt-4 mb-3">
-            <label
-              htmlFor="password"
-              className="col-4 col-lg-3 col-form-label me-2"
-            >
+            <label htmlFor="password" className="col-4 col-lg-3 col-form-label me-2">
               Password:
             </label>
             <div className="col-7 col-lg-8">

@@ -30,14 +30,21 @@ const CreateProduct = ({ isOpen, onClose }) => {
       const productID = newProduct.data.data.product_id;
       toast.success("Product added successfully!");
   
-      // Now, call the image upload function
       await uploadImage(productID, product.image);
   
       onClose();
       window.location.reload();
     } catch (error) {
       console.log(error);
-      toast.error("Error adding product!");
+      const errors = error.response.data.errors;
+        errors.title && toast.error(errors.title[0]);
+        errors.category && toast.error(errors.category[0]);
+        errors.description && toast.error(errors.description[0]); 
+        errors.name && toast.error(errors.name[0]); 
+        errors.price && toast.error(errors.price[0]);
+        errors.quantity && toast.error(errors.quantity[0]);
+
+      
     }
   };
   
