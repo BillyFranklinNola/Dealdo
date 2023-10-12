@@ -12,7 +12,7 @@ PASSWORD_REGEX = re.compile(r'^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&+=])(?=.*[a-z]).{
 ADDRESS_REGEX = re.compile(r'^(.*),\s*(.*),\s*([A-Za-z]{2}),\s*(\d{5}(?:-\d{4})?)$')
 
 class User:
-    db = os.environ.get('ecommerce_schema')
+    db = os.environ.get('DATABASE')
 
     def __init__(self, data):
         self.id = data['id']

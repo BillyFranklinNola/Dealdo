@@ -6,7 +6,7 @@ import os
 load_dotenv()
 
 class Cart:
-    db = os.environ.get('ecommerce_schema')
+    db = os.environ.get('DATABASE')
 
     query_select_cart = """SELECT carts.*,
                    GROUP_CONCAT(products.id SEPARATOR '^') AS product_ids,

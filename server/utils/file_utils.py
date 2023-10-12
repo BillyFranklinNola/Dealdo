@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 import os, uuid
 load_dotenv()
 
-db = os.environ.get('ecommerce_schema')
+db = os.environ.get('DATABASE')
 UPLOAD_FOLDER = './uploads'
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 MAX_IMAGE_SIZE = 5 * 1024 * 1024  # 2 MB (adjust as needed)

@@ -10,7 +10,7 @@ bcrypt = Bcrypt(app)
 VALID_CATEGORY_PATTERN = re.compile(r"^\s*(\w+(\s*,\s*\w+)*)?\s*$")
 
 class Product:
-    db = os.environ.get('ecommerce_schema')
+    db = os.environ.get('DATABASE')
 
     query_get_all_products = """SELECT products.*, users.*,
                    GROUP_CONCAT(reviews.id SEPARATOR '^') AS review_by_ids,
